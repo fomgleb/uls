@@ -5,10 +5,15 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <fcntl.h>
-// For linux
-// #include <malloc.h>
-// For macos
+
+#ifdef __APPLE__
 #include <malloc/malloc.h>
+#endif  //__APPLE__
+
+#ifdef __linux__
+#include <malloc.h>
+#define malloc_size malloc_usable_size
+#endif  //__linux__
 
 #include <stdio.h>
 
@@ -56,7 +61,6 @@ char *mx_itoa(int number);
 void mx_foreach(int *arr, int size, void (*f)(int));
 int mx_binary_search(char **arr, int size, const char *s, int *count);
 // Description: test with random strings
-
 // user output vs test output
 // 2c2
 // < found = 1, count = 3
