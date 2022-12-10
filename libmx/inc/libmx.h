@@ -8,12 +8,12 @@
 
 #ifdef __APPLE__
 #include <malloc/malloc.h>
-#endif  //__APPLE__
+#endif
 
 #ifdef __linux__
 #include <malloc.h>
 #define malloc_size malloc_usable_size
-#endif  //__linux__
+#endif
 
 #include <stdio.h>
 
@@ -38,6 +38,8 @@ t_list *mx_get_by_index(t_list *head, int index);
 bool mx_num_in_str_is_positive(char *str);
 void mx_free_str_arr(char ***str_arr);
 bool mx_isalpha(int c);
+void mx_printerrn(const char *s, int n);
+void mx_pop_node(t_list **head, t_list *node);
 
 // Need
 void mx_printchar(char c);
