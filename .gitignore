@@ -1,0 +1,7 @@
+main
+obj
+libmx/obj
+*.a
+*.bin
+.vscode
+uls

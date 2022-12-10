@@ -1,4 +1,4 @@
-BINARYNAME = libmx.a
+BINARYNAME = uls
 CC = clang
 CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -g
 OBJDIR = obj
@@ -6,10 +6,11 @@ SRCDIR = src
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(addprefix $(OBJDIR)/,$(notdir $(SOURCES:.c=.o)))
 
-all: create_objdir $(SOURCES) $(BINARYNAME)
+all: $(SOURCES) $(BINARYNAME)
 
-$(BINARYNAME): $(OBJECTS)
-	ar cr $(BINARYNAME) $(OBJECTS)
+$(BINARYNAME): create_objdir $(OBJECTS)
+	make -C libmx
+	$(CC) $(CFLAGS) $(OBJECTS) -Llibmx -lmx -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -24,9 +25,6 @@ reinstall: uninstall all
 
 create_objdir:
 	mkdir -p $(OBJDIR)
-
-# main.bin: main.c $(BINARYNAME)
-# 	$(CC) $(CFLAGS) main.c -L. -lmx -o main.bin
 
 #!/bin/sh -e
 #clang -std=c11 -Wall -Wextra -Werror -Wpedantic -c *.c

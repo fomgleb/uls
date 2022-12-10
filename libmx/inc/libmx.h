@@ -5,10 +5,15 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <fcntl.h>
-// For linux
-// #include <malloc.h>
-// For macos
+
+#ifdef __APPLE__
 #include <malloc/malloc.h>
+#endif
+
+#ifdef __linux__
+#include <malloc.h>
+#define malloc_size malloc_usable_size
+#endif
 
 #include <stdio.h>
 
@@ -33,6 +38,9 @@ t_list *mx_get_by_index(t_list *head, int index);
 bool mx_num_in_str_is_positive(char *str);
 void mx_free_str_arr(char ***str_arr);
 bool mx_isalpha(int c);
+void mx_printerrn(const char *s, int n);
+void mx_pop_node(t_list **head, t_list *node);
+void mx_printerrch(const char c);
 
 // Need
 void mx_printchar(char c);
@@ -56,7 +64,6 @@ char *mx_itoa(int number);
 void mx_foreach(int *arr, int size, void (*f)(int));
 int mx_binary_search(char **arr, int size, const char *s, int *count);
 // Description: test with random strings
-
 // user output vs test output
 // 2c2
 // < found = 1, count = 3
