@@ -1,7 +1,7 @@
 #include "../inc/main.h"
 
 int main(int argc, char **argv) {
-    const char *EXISTING_FLAGS = "Aad";
+    const char *EXISTING_FLAGS = "ARad";
 
     t_args args = mx_convert_to_args(argc, argv);
     mx_prepare_args(&args, EXISTING_FLAGS);
@@ -11,50 +11,20 @@ int main(int argc, char **argv) {
         t_entry entry = *(t_entry *)i->data;
         if (S_ISREG(entry.stat.st_mode)) {
             mx_printstr(entry.relative_path);
-            mx_printchar('\n');
+            mx_printchar('\n');    
         }
     }
     mx_printchar('\n');
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         t_entry entry = *(t_entry *)i->data;
         if (S_ISDIR(entry.stat.st_mode)) {
-            mx_printstr(entry.relative_path);
-            mx_printstr(":\n");
-            for (t_list *j = entry.entries_list; j != NULL; j = j->next) {
-                mx_printstr((*(t_entry *)j->data).dirent.d_name);
-                mx_printchar('\n');
-            }
-            mx_printchar('\n');
+            mx_print_directory_content_recursively(entry);
         }
-    }    
-
+    }
+        
     mx_free_main_variables(args, entries_list);
 
     return 0;
-
-    // Printing
-    // if (main_variables.args.flags == NULL) {
-    //     for (t_list *i = main_variables.entries_list; i != NULL; i = i->next) {
-    //         t_entry entry = *(t_entry *)i->data;
-
-    //     }
-    //     for (t_list *i = main_variables.entries_list; i != NULL; i = i->next) {
-    //         t_entry entry = *(t_entry *)i->data;
-    //         mx_printstr(entry.relative_path);
-    //         mx_printstr(":\n");
-    //         for (t_list *j = entry.entries_list; j != NULL; j = j->next) {
-    //             mx_printstr(((t_entry *)j->data)->dirent.d_name);
-    //             mx_printchar('\n');
-    //         }
-    //         mx_printchar('\n');
-    //     }
-    // } else if (mx_strchr(main_variables.args.flags, 'd') != NULL) {
-    //     for (t_list *node = main_variables.entries_list; node != NULL; node = node->next) {
-    //         t_entry entry = *(t_entry *)node->data;
-    //         mx_printstr(entry.relative_path);
-    //         mx_printchar('\n');
-    //     }
-    // }
 
     // int list_size = 100;
     // char *list = malloc(list_size);
@@ -111,29 +81,51 @@ t_list *mx_find_entries_list(t_args args) {
     if (d_flag) {
         return entries_list;
     } else if (R_flag) {
-        // Some code
+        for (t_list *i = entries_list; i != NULL; i = i->next) {
+            t_entry *entry = (t_entry *)i->data;
+            if (S_ISDIR(entry->stat.st_mode)) {
+                entry->entries_list = mx_get_entries_in_directory_recursively(*entry, a_flag || A_flag, !a_flag && A_flag);
+            }
+        }
     } else {
         for (t_list *node = entries_list; node != NULL; node = node->next) {
             t_entry *entry = (t_entry *)node->data;
             if (S_ISDIR(entry->stat.st_mode)) {
-                entry->entries_list = mx_get_entries_in_directory(*entry, !A_flag && !a_flag);
+                entry->entries_list = mx_get_entries_in_directory(*entry, a_flag || A_flag, !a_flag && A_flag);
             }
-            if (A_flag && !a_flag) {
-                t_list *next_j;
-                for (t_list *j = entry->entries_list; j != NULL; j = next_j) {
-                    next_j = j->next;
-                    if (mx_strcmp(((t_entry *)j->data)->dirent.d_name, ".") == 0 ||
-                    mx_strcmp(((t_entry *)j->data)->dirent.d_name, "..") == 0) {
-                        t_entry *j_entry = (t_entry *)j->data;
-                        mx_free_entry_ptr(&j_entry);
-                        mx_pop_node(&entry->entries_list, j);
-                    }
-                }
-            }
+            // if (A_flag && !a_flag) {
+            //     t_list *next_j;
+            //     for (t_list *j = entry->entries_list; j != NULL; j = next_j) {
+            //         next_j = j->next;
+            //         if (mx_strcmp(((t_entry *)j->data)->dirent.d_name, ".") == 0 ||
+            //         mx_strcmp(((t_entry *)j->data)->dirent.d_name, "..") == 0) {
+            //             t_entry *j_entry = (t_entry *)j->data;
+            //             mx_free_entry_ptr(&j_entry);
+            //             mx_pop_node(&entry->entries_list, j);
+            //         }
+            //     }
+            // }
         }
     }
 
     return entries_list;
+}
+
+void mx_print_directory_content_recursively(t_entry directory) {
+    mx_printstr(directory.relative_path);
+    mx_printstr(":\n");
+    for (t_list *i = directory.entries_list; i != NULL; i = i->next) {
+        t_entry entry = *(t_entry *)i->data;
+        mx_printstr(entry.dirent.d_name);
+        mx_printchar('\n');
+    }
+    mx_printchar('\n');
+    for (t_list *i = directory.entries_list; i != NULL; i = i->next) {
+        t_entry entry = *(t_entry *)i->data;
+        if (S_ISDIR(entry.stat.st_mode) && mx_strcmp(entry.dirent.d_name, ".") != 0 && mx_strcmp(entry.dirent.d_name, "..") != 0) {
+            mx_print_directory_content_recursively(entry);
+        }
+    }
 }
 
 void mx_free_main_variables(t_args args, t_list *entries_list) {
