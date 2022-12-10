@@ -123,7 +123,9 @@ t_list *mx_find_entries_list(t_args args) {
                 for (t_list *j = entry->entries_list; j != NULL; j = next_j) {
                     next_j = j->next;
                     if (mx_strcmp(((t_entry *)j->data)->dirent.d_name, ".") == 0 ||
-                        mx_strcmp(((t_entry *)j->data)->dirent.d_name, "..") == 0) {
+                    mx_strcmp(((t_entry *)j->data)->dirent.d_name, "..") == 0) {
+                        t_entry *j_entry = (t_entry *)j->data;
+                        mx_free_entry_ptr(&j_entry);
                         mx_pop_node(&entry->entries_list, j);
                     }
                 }
