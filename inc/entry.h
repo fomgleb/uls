@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base_includes.h"
-#include "path.h"
 
 typedef struct s_entry {
     char *relative_path;
