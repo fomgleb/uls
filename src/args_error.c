@@ -35,11 +35,9 @@ t_args_error mx_validate_args(t_args args, const char *existing_flags) {
         if (errno != 0) {
             args_error.error_code = NON_EXISTENT_ENTRY;
             mx_push_front(&args_error.invalid_entry_names_list, mx_strdup(node->data));
-            return args_error;
         }    
     }
 
-    args_error.error_code = NO_ERRORS;
     return args_error;
 }
 
@@ -55,7 +53,8 @@ void mx_print_args_error(t_args_error args_error) {
         }
     } else if (args_error.error_code == ILLEGAL_FLAG) {
         mx_printerr("uls: illegal option -- ");
-        mx_printerr(&args_error.illegal_flag);
+        mx_printerrch(args_error.illegal_flag);
+        mx_printerrch('\n');
         mx_printerr(USAGE_MESSAGE);
     }
 }

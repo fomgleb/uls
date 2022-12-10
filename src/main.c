@@ -4,7 +4,7 @@ int main(int argc, char **argv) {
     const char *EXISTING_FLAGS = "Aad";
 
     t_args args = mx_convert_to_args(argc, argv);
-    mx_prepare_args(args, EXISTING_FLAGS);
+    mx_prepare_args(&args, EXISTING_FLAGS);
     t_list *entries_list = mx_find_entries_list(args);
 
     for (t_list *i = entries_list; i != NULL; i = i->next) {
@@ -73,20 +73,20 @@ int main(int argc, char **argv) {
     // }
 }
 
-void mx_prepare_args(t_args args, const char *existing_args) {
-    t_args_error args_error = mx_validate_args(args, existing_args);
+void mx_prepare_args(t_args *args, const char *existing_args) {
+    t_args_error args_error = mx_validate_args(*args, existing_args);
 
     mx_print_args_error(args_error);
     if (args_error.error_code == ILLEGAL_FLAG) {
-        mx_free_main_variables(args, NULL);
+        mx_free_main_variables(*args, NULL);
         exit(0);
     }
     for (t_list *invalid = args_error.invalid_entry_names_list; invalid != NULL; invalid = invalid->next) {
-        for (t_list *exist = args.entry_names_list; exist != NULL;) {
+        for (t_list *exist = args->entry_names_list; exist != NULL;) {
             if (mx_strcmp(invalid->data, exist->data) == 0) {
                 t_list *next_node = exist->next;
                 free(exist->data);
-                mx_pop_node(&args.entry_names_list, exist);
+                mx_pop_node(&args->entry_names_list, exist);
                 exist = next_node;
                 continue;
             }

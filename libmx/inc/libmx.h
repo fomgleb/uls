@@ -40,6 +40,7 @@ void mx_free_str_arr(char ***str_arr);
 bool mx_isalpha(int c);
 void mx_printerrn(const char *s, int n);
 void mx_pop_node(t_list **head, t_list *node);
+void mx_printerrch(const char c);
 
 // Need
 void mx_printchar(char c);
