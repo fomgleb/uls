@@ -1,7 +1,7 @@
 #include "../inc/main.h"
 
 int main(int argc, char **argv) {
-    const char *EXISTING_FLAGS = "ARSadftu";
+    const char *EXISTING_FLAGS = "ARSUacdfrtu";
 
     t_args args = mx_convert_to_args(argc, argv);
     mx_prepare_args(&args, EXISTING_FLAGS);
@@ -101,8 +101,6 @@ t_list *mx_find_entries_list(t_args args) {
 void mx_sort_entries_list_recursively(t_list *entries_list, t_args args) {
     t_sorting_flags flags = mx_create_sorting_flags(args.flags);
 
-    
-
     if (flags.f) {
         return;
     } else if (flags.S) {
@@ -111,10 +109,16 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_args args) {
         if (flags.u > flags.U && flags.u > flags.c) {
             mx_sort_list(entries_list, mx_sort_entries_by_last_access);
         } else if (flags.U > flags.u && flags.U > flags.c) {
-
+            mx_sort_list(entries_list, mx_sort_entries_by_creation_time);
+        } else {
+            mx_sort_list(entries_list, mx_sort_entries_by_last_modification);
         }
     } else {
         mx_sort_list(entries_list, mx_sort_entries_by_name);
+    }
+
+    if (flags.r) {
+        mx_sort_list(entries_list, mx_reverse_entries);
     }
 
     for (t_list *i = entries_list; i != NULL; i = i->next) {

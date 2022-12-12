@@ -41,15 +41,25 @@ bool mx_sort_entries_by_name(void *a, void *b) {
 }
 
 bool mx_sort_entries_by_size(void *a, void *b) {
-    t_entry a_entry = *(t_entry *)a;
-    t_entry b_entry = *(t_entry *)b;
-    return a_entry.stat.st_size < b_entry.stat.st_size;
+    return (*(t_entry *)a).stat.st_size < (*(t_entry *)b).stat.st_size;
+}
+
+bool mx_sort_entries_by_last_modification(void *a, void *b) {
+    return (*(t_entry *)a).stat.st_mtime < (*(t_entry *)b).stat.st_mtime;
 }
 
 bool mx_sort_entries_by_last_access(void *a, void *b) {
-    t_entry a_entry = *(t_entry *)a;
-    t_entry b_entry = *(t_entry *)b;
-    return a_entry.stat.st_atime < b_entry.stat.st_atime;
+    return (*(t_entry *)a).stat.st_atime < (*(t_entry *)b).stat.st_atime;
+}
+
+bool mx_sort_entries_by_creation_time(void *a, void *b) {
+    return (*(t_entry *)a).stat.st_ctime < (*(t_entry *)b).stat.st_ctime;
+}
+
+bool mx_reverse_entries(void *a, void *b) {
+    (void)a;
+    (void)b;
+    return true;
 }
 
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {
