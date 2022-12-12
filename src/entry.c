@@ -41,24 +41,41 @@ bool mx_sort_entries_by_name(void *a, void *b) {
 }
 
 bool mx_sort_entries_by_size(void *a, void *b) {
-    return (*(t_entry *)a).stat.st_size < (*(t_entry *)b).stat.st_size;
+    time_t a_size = (*(t_entry *)a).stat.st_size;
+    time_t b_size = (*(t_entry *)b).stat.st_size;
+    return  a_size == b_size ?
+            mx_sort_entries_by_name(a, b) :
+            a_size < b_size;
 }
 
 bool mx_sort_entries_by_last_modification(void *a, void *b) {
-    return (*(t_entry *)a).stat.st_mtime < (*(t_entry *)b).stat.st_mtime;
+    time_t a_last_modification_time = (*(t_entry *)a).stat.st_mtime;
+    time_t b_last_modification_time = (*(t_entry *)b).stat.st_mtime;
+    return  a_last_modification_time == b_last_modification_time ?
+            mx_sort_entries_by_name(a, b) :
+            a_last_modification_time < b_last_modification_time;
 }
 
 bool mx_sort_entries_by_last_access(void *a, void *b) {
-    return (*(t_entry *)a).stat.st_atime < (*(t_entry *)b).stat.st_atime;
+    time_t a_last_access_time = (*(t_entry *)a).stat.st_atime;
+    time_t b_last_access_time = (*(t_entry *)b).stat.st_atime;
+    return  a_last_access_time == b_last_access_time ?
+            mx_sort_entries_by_name(a, b) :
+            a_last_access_time < b_last_access_time;
 }
 
 bool mx_sort_entries_by_creation_time(void *a, void *b) {
 #ifdef __APPLE__
-    return (*(t_entry *)a).stat.st_birthtimespec.tv_sec < (*(t_entry *)b).stat.st_birthtimespec.tv_sec;
+    time_t a_creation_time = (*(t_entry *)a).stat.st_birthtimespec.tv_sec;
+    time_t b_creation_time = (*(t_entry *)b).stat.st_birthtimespec.tv_sec;
 #endif
 #ifdef __linux__
-    return (*(t_entry *)a).stat.st_ctime < (*(t_entry *)b).stat.st_ctime;
+    time_t a_creation_time = (*(t_entry *)a).stat.st_ctime;
+    time_t b_creation_time = (*(t_entry *)b).stat.st_ctime;
 #endif
+    return  a_creation_time == b_creation_time ?
+            mx_sort_entries_by_name(a, b) :
+            a_creation_time < b_creation_time;
 }
 
 bool mx_reverse_entries(void *a, void *b) {
