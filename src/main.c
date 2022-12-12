@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 void mx_prepare_args(t_args *args, const char *existing_args) {
     t_args_error args_error = mx_validate_args(*args, existing_args);
 
-    mx_print_args_error(args_error);
+    mx_print_args_error(args_error, existing_args);
     if (args_error.error_code == ILLEGAL_FLAG) {
         mx_free_main_variables(*args, NULL);
         exit(0);
