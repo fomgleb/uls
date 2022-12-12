@@ -41,7 +41,7 @@ t_args_error mx_validate_args(t_args args, const char *existing_flags) {
     return args_error;
 }
 
-void mx_print_args_error(t_args_error args_error) {
+void mx_print_args_error(t_args_error args_error, const char *existing_flags) {
     if (args_error.error_code == NON_EXISTENT_ENTRY) {
         for (t_list *node = args_error.invalid_entry_names_list; node != NULL; node = node->next) {
             mx_printerr(PROGRAM_NAME);
@@ -55,7 +55,9 @@ void mx_print_args_error(t_args_error args_error) {
         mx_printerr("uls: illegal option -- ");
         mx_printerrch(args_error.illegal_flag);
         mx_printerrch('\n');
-        mx_printerr(USAGE_MESSAGE);
+        mx_printerr("usage: uls [-");
+        mx_printerr(existing_flags);
+        mx_printerr("] [file ...]\n");
     }
 }
 

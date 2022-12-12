@@ -1,5 +1,7 @@
 #include "../inc/entry.h"
 
+#pragma region Constructors/Destructors
+
 t_entry mx_create_entry(char *relative_path) {
     t_entry entry;
     entry.relative_path = mx_strdup(relative_path);
@@ -31,6 +33,10 @@ void mx_free_entry_ptr(t_entry **entry) {
     *entry = NULL;
 }
 
+#pragma endregion
+
+#pragma region Sorting
+
 bool mx_sort_entries_by_name(void *a, void *b) {
     t_entry a_entry = *(t_entry *)a;
     t_entry b_entry = *(t_entry *)b;
@@ -45,6 +51,14 @@ bool mx_sort_entries_by_size(void *a, void *b) {
     t_entry b_entry = *(t_entry *)b;
     return a_entry.stat.st_size < b_entry.stat.st_size;
 }
+
+bool mx_sort_entries_by_last_access(void *a, void *b) {
+    t_entry a_entry = *(t_entry *)a;
+    t_entry b_entry = *(t_entry *)b;
+    return a_entry.stat.st_atime < b_entry.stat.st_atime;
+}
+
+#pragma endregion
 
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {
     t_list *read_entries_list = NULL;

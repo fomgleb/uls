@@ -41,6 +41,7 @@ bool mx_isalpha(int c);
 void mx_printerrn(const char *s, int n);
 void mx_pop_node(t_list **head, t_list *node);
 void mx_printerrch(const char c);
+char *mx_strchr_last(const char *s, int c);
 
 // Need
 void mx_printchar(char c);
