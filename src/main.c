@@ -1,11 +1,12 @@
 #include "../inc/main.h"
 
 int main(int argc, char **argv) {
-    const char *EXISTING_FLAGS = "ARad";
+    const char *EXISTING_FLAGS = "ARSUacdfrtu";
 
     t_args args = mx_convert_to_args(argc, argv);
     mx_prepare_args(&args, EXISTING_FLAGS);
     t_list *entries_list = mx_find_entries_list(args);
+    mx_sort_entries_list_recursively(entries_list, args);
 
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         t_entry entry = *(t_entry *)i->data;
@@ -21,7 +22,7 @@ int main(int argc, char **argv) {
             mx_print_directory_content_recursively(entry);
         }
     }
-        
+
     mx_free_main_variables(args, entries_list);
 
     return 0;
@@ -46,7 +47,7 @@ int main(int argc, char **argv) {
 void mx_prepare_args(t_args *args, const char *existing_args) {
     t_args_error args_error = mx_validate_args(*args, existing_args);
 
-    mx_print_args_error(args_error);
+    mx_print_args_error(args_error, existing_args);
     if (args_error.error_code == ILLEGAL_FLAG) {
         mx_free_main_variables(*args, NULL);
         exit(0);
@@ -69,46 +70,59 @@ void mx_prepare_args(t_args *args, const char *existing_args) {
 
 t_list *mx_find_entries_list(t_args args) {
     t_list *entries_list = NULL;
-    bool a_flag = args.flags != NULL && mx_strchr(args.flags, 'a') != NULL;
-    bool A_flag = args.flags != NULL && mx_strchr(args.flags, 'A') != NULL;
-    bool d_flag = args.flags != NULL && mx_strchr(args.flags, 'd') != NULL;
-    bool R_flag = args.flags != NULL && mx_strchr(args.flags, 'R') != NULL;
+    t_selection_flags flags = mx_create_selection_flags(args.flags);
 
     for (t_list *node = args.entry_names_list; node != NULL; node = node->next) {
         mx_push_front(&entries_list, mx_create_entry_ptr(node->data));
     }
 
-    if (d_flag) {
+    if (flags.d) {
         return entries_list;
-    } else if (R_flag) {
+    } else if (flags.R) {
         for (t_list *i = entries_list; i != NULL; i = i->next) {
             t_entry *entry = (t_entry *)i->data;
             if (S_ISDIR(entry->stat.st_mode)) {
-                entry->entries_list = mx_get_entries_in_directory_recursively(*entry, a_flag || A_flag, !a_flag && A_flag);
+                entry->entries_list = mx_get_entries_in_directory_recursively(*entry, flags.a || flags.A, !flags.a && flags.A);
             }
         }
     } else {
         for (t_list *node = entries_list; node != NULL; node = node->next) {
             t_entry *entry = (t_entry *)node->data;
             if (S_ISDIR(entry->stat.st_mode)) {
-                entry->entries_list = mx_get_entries_in_directory(*entry, a_flag || A_flag, !a_flag && A_flag);
+                entry->entries_list = mx_get_entries_in_directory(*entry, flags.a || flags.A, !flags.a && flags.A);
             }
-            // if (A_flag && !a_flag) {
-            //     t_list *next_j;
-            //     for (t_list *j = entry->entries_list; j != NULL; j = next_j) {
-            //         next_j = j->next;
-            //         if (mx_strcmp(((t_entry *)j->data)->dirent.d_name, ".") == 0 ||
-            //         mx_strcmp(((t_entry *)j->data)->dirent.d_name, "..") == 0) {
-            //             t_entry *j_entry = (t_entry *)j->data;
-            //             mx_free_entry_ptr(&j_entry);
-            //             mx_pop_node(&entry->entries_list, j);
-            //         }
-            //     }
-            // }
         }
     }
 
     return entries_list;
+}
+
+void mx_sort_entries_list_recursively(t_list *entries_list, t_args args) {
+    t_sorting_flags flags = mx_create_sorting_flags(args.flags);
+
+    if (flags.f) {
+        return;
+    } else if (flags.S) {
+        mx_sort_list(entries_list, mx_sort_entries_by_size);
+    } else if (flags.t) {
+        if (flags.u > flags.U && flags.u > flags.c) {
+            mx_sort_list(entries_list, mx_sort_entries_by_last_access);
+        } else if (flags.U > flags.u && flags.U > flags.c) {
+            mx_sort_list(entries_list, mx_sort_entries_by_creation_time);
+        } else {
+            mx_sort_list(entries_list, mx_sort_entries_by_last_modification);
+        }
+    } else {
+        mx_sort_list(entries_list, mx_sort_entries_by_name);
+    }
+
+    if (flags.r) {
+        mx_reverse_list(entries_list);
+    }
+
+    for (t_list *i = entries_list; i != NULL; i = i->next) {
+        mx_sort_entries_list_recursively(((t_entry *)i->data)->entries_list, args);
+    }
 }
 
 void mx_print_directory_content_recursively(t_entry directory) {
@@ -116,13 +130,13 @@ void mx_print_directory_content_recursively(t_entry directory) {
     mx_printstr(":\n");
     for (t_list *i = directory.entries_list; i != NULL; i = i->next) {
         t_entry entry = *(t_entry *)i->data;
-        mx_printstr(entry.dirent.d_name);
+        mx_printstr(entry.dirent->d_name);
         mx_printchar('\n');
     }
     mx_printchar('\n');
     for (t_list *i = directory.entries_list; i != NULL; i = i->next) {
         t_entry entry = *(t_entry *)i->data;
-        if (S_ISDIR(entry.stat.st_mode) && mx_strcmp(entry.dirent.d_name, ".") != 0 && mx_strcmp(entry.dirent.d_name, "..") != 0) {
+        if (S_ISDIR(entry.stat.st_mode) && mx_strcmp(entry.dirent->d_name, ".") != 0 && mx_strcmp(entry.dirent->d_name, "..") != 0) {
             mx_print_directory_content_recursively(entry);
         }
     }
