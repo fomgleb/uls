@@ -1,7 +1,7 @@
 #include "../inc/main.h"
 
 int main(int argc, char **argv) {
-    const char *EXISTING_FLAGS = "ARadf";
+    const char *EXISTING_FLAGS = "ARSadf";
 
     t_args args = mx_convert_to_args(argc, argv);
     mx_prepare_args(&args, EXISTING_FLAGS);
@@ -103,11 +103,14 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_args args) {
 
     if (flags.f) {
         return;
+    } else if (flags.S) {
+        mx_sort_list(entries_list, mx_sort_entries_by_size);
     } else {
         mx_sort_list(entries_list, mx_sort_entries_by_name);
-        for (t_list *i = entries_list; i != NULL; i = i->next) {
-            mx_sort_entries_list_recursively(((t_entry *)i->data)->entries_list, args);
-        }
+    }
+
+    for (t_list *i = entries_list; i != NULL; i = i->next) {
+        mx_sort_entries_list_recursively(((t_entry *)i->data)->entries_list, args);
     }
 }
 

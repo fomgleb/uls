@@ -40,6 +40,12 @@ bool mx_sort_entries_by_name(void *a, void *b) {
     return mx_strcmp(a_entry.dirent->d_name, b_entry.dirent->d_name) > 0;
 }
 
+bool mx_sort_entries_by_size(void *a, void *b) {
+    t_entry a_entry = *(t_entry *)a;
+    t_entry b_entry = *(t_entry *)b;
+    return a_entry.stat.st_size < b_entry.stat.st_size;
+}
+
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {
     t_list *read_entries_list = NULL;
     DIR *dirstream = opendir(directory.relative_path);

@@ -104,12 +104,12 @@ There are three types of flags.
 1. Elements selection:
     ✓ -A - do not list implied . and ..;
     ✓ -a - do not ignore entries starting with .;
-    -f - Output is not sorted. This option turns on the -a option;
+    ✓ -f - Output is not sorted. This option turns on the -a option;
     ✓ -R - recursively, по всем папкам и по папкам что в папках и тд;
     ✓ -d - directories are listed as plain files (not searched recursively);
 
 2 Sorting:
-    -f - Output is not sorted. This option turns on the -a option;
+    ✓ -f - Output is not sorted. This option turns on the -a option;
     -t - Sorting by last modified;
     -c - Use time when file status was last changed for sorting (-t) or long printing (-l);
     -u - Use time of last access, instead of last modification of the file for sorting (-t) or long printing (-l);
