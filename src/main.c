@@ -6,7 +6,6 @@ int main(int argc, char **argv) {
     t_args args = mx_convert_to_args(argc, argv);
     mx_prepare_args(&args, EXISTING_FLAGS);
     t_list *entries_list = mx_find_entries_list(args);
-
     mx_sort_entries_list_recursively(entries_list, args);
 
     for (t_list *i = entries_list; i != NULL; i = i->next) {

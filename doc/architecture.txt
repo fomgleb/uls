@@ -19,12 +19,12 @@ Flags:
     -C - Force multi-column output; this is the default when output is to a terminal;
 
     // Low required
-    -r - Reverse the order of the sort to get reverse lexicographical order or the oldest entries first (or largest files last,
-         if combined with sort by size;
-    -t - Sort by time modified (most recently modified first) before sorting the operands by lexicographical order;
-    -u - Use time of last access, instead of last modification of the file for sorting (-t) or long printing (-l);
-    -c - Use time when file status was last changed for sorting (-t) or long printing (-l);
-    -S - Sort files by size;
+ ✓ -r - Reverse the order of the sort to get reverse lexicographical order or the oldest entries first (or largest files last,
+        if combined with sort by size;
+ ✓ -t - Sort by time modified (most recently modified first) before sorting the operands by lexicographical order;
+ ✓ -u - Use time of last access, instead of last modification of the file for sorting (-t) or long printing (-l);
+ ✓ -c - Use time when file status was last changed for sorting (-t) or long printing (-l);
+ ✓ -S - Sort files by size;
 
 ################################################## ALLOWED FUNCTIONS: ##################################################
 
@@ -104,7 +104,6 @@ There are three types of flags.
 1. Elements selection:
     ✓ -A - do not list implied . and ..;
     ✓ -a - do not ignore entries starting with .;
-    ✓ -f - Output is not sorted. This option turns on the -a option;
     ✓ -R - recursively, по всем папкам и по папкам что в папках и тд;
     ✓ -d - directories are listed as plain files (not searched recursively);
 
