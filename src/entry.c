@@ -54,7 +54,7 @@ bool mx_sort_entries_by_last_access(void *a, void *b) {
 
 bool mx_sort_entries_by_creation_time(void *a, void *b) {
 #ifdef __APPLE__
-    return (*(t_entry *)a).stat.st_birthtimespec < (*(t_entry *)b).stat.st_birthtimespec;
+    return (*(t_entry *)a).stat.st_birthtimespec.tv_sec < (*(t_entry *)b).stat.st_birthtimespec.tv_sec;
 #endif
 #ifdef __linux__
     return (*(t_entry *)a).stat.st_ctime < (*(t_entry *)b).stat.st_ctime;
