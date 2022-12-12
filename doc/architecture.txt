@@ -114,7 +114,7 @@ There are three types of flags.
     ✓ -c - Use time when file status was last changed for sorting (-t) or long printing (-l);
     ✓ -u - Use time of last access, instead of last modification of the file for sorting (-t) or long printing (-l);
     ✓ -U - Use time of file creation, instead of last modification for sorting (-t) or long output (-l);
-    -r - Reverse the order of the sort to get reverse lexicographical order or the oldest entries first (or largest files last, if combined
+    ✓ -r - Reverse the order of the sort to get reverse lexicographical order or the oldest entries first (or largest files last, if combined
          with sort by size;
     ✓ -S - Sort files by size;
 

@@ -53,13 +53,19 @@ bool mx_sort_entries_by_last_access(void *a, void *b) {
 }
 
 bool mx_sort_entries_by_creation_time(void *a, void *b) {
+#ifdef __APPLE__
+    return (*(t_entry *)a).stat.st_birthtimespec < (*(t_entry *)b).stat.st_birthtimespec;
+#endif
+#ifdef __linux__
     return (*(t_entry *)a).stat.st_ctime < (*(t_entry *)b).stat.st_ctime;
+#endif
 }
 
 bool mx_reverse_entries(void *a, void *b) {
-    (void)a;
-    (void)b;
-    return true;
+    if (mx_strcmp((*(t_entry *)a).relative_path, (*(t_entry *)b).relative_path) != 0) {
+        return true;
+    }
+    return false;
 }
 
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {

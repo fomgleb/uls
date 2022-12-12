@@ -118,7 +118,7 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_args args) {
     }
 
     if (flags.r) {
-        mx_sort_list(entries_list, mx_reverse_entries);
+        mx_reverse_list(entries_list);
     }
 
     for (t_list *i = entries_list; i != NULL; i = i->next) {
