@@ -18,11 +18,11 @@ void mx_free_args_error(t_args_error args_error) {
 t_args_error mx_validate_args(t_args args, const char *existing_flags) {
     t_args_error args_error = mx_create_args_error();
 
-    if (args.flags != NULL) {
-        for (int i = 0; args.flags[i] != '\0'; i++) {
-            if (mx_strchr(existing_flags, args.flags[i]) == NULL) {
+    if (args.flags_str != NULL) {
+        for (int i = 0; args.flags_str[i] != '\0'; i++) {
+            if (mx_strchr(existing_flags, args.flags_str[i]) == NULL) {
                 args_error.error_code = ILLEGAL_FLAG;
-                args_error.illegal_flag = args.flags[i];
+                args_error.illegal_flag = args.flags_str[i];
                 return args_error;
             }
         }

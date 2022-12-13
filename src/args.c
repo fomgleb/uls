@@ -3,7 +3,7 @@
 t_args mx_create_args(void) {
     t_args new_args;
     new_args.entry_names_list = NULL;
-    new_args.flags = NULL;
+    new_args.flags_str = NULL;
     return new_args;
 }
 
@@ -13,7 +13,7 @@ void mx_free_args(t_args args) {
         free(entry_name);
     }
     mx_clear_list(&args.entry_names_list);
-    free(args.flags);
+    free(args.flags_str);
 }
 
 t_args mx_convert_to_args(int argc, char **argv) {
@@ -21,9 +21,9 @@ t_args mx_convert_to_args(int argc, char **argv) {
 
     int argv_index = 1;
     for (; argv_index < argc && argv[argv_index][0] == '-' && argv[argv_index][1] != '\0'; argv_index++) {
-        char *new_flags = mx_strjoin(new_args.flags, argv[argv_index] + 1);
-        free(new_args.flags);
-        new_args.flags = new_flags;
+        char *new_flags = mx_strjoin(new_args.flags_str, argv[argv_index] + 1);
+        free(new_args.flags_str);
+        new_args.flags_str = new_flags;
     }
 
     for (; argv_index < argc; argv_index++) {

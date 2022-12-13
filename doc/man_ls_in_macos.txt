@@ -158,7 +158,7 @@ DESCRIPTION
      fully); they are applied in the order specified.
 
      By default, ls lists one entry per line to standard output; the excep-
-     tions are to terminals or when the -C or -x options are specified.
+     tions are to terminals or when the -C or -x optSions are specified.
 
      File information is displayed with one or more <blank>s separating the
      information associated with the -i, -s, and -l options.

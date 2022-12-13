@@ -4,6 +4,9 @@
 #include <errno.h>
 #include <math.h>
 #include <sys/types.h>
+#ifdef __APPLE__
+#include <sys/acl.h>
+#endif
 #include <sys/xattr.h>
 #include <sys/stat.h>
 #include <dirent.h>
