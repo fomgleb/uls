@@ -42,8 +42,12 @@ char *mx_get_permissions_str(mode_t file_mode, char *path_to_file) {
     if (file_mode & S_ISVTX)
         permissions_str[9] = (file_mode & S_IXOTH) ? 't' : 'T';
 #endif /* S_ISVTX */
-    char xattr_buffer[1000];
-    bool has_xattr = listxattr(path_to_file, xattr_buffer, 1000) > 0;
+#ifdef __APPLE__
+    bool has_xattr = listxattr(path_to_file, NULL, 1000, 0) > 0;
+#endif /* __APPLE__ */
+#ifdef __linux__
+    bool has_xattr = listxattr(path_to_file, NULL, 1000) > 0;
+#endif /* __linux__ */
 #ifdef ACL_TYPE_ACCESS
     bool has_acl = acl_get_file(path_to_file, ACL_TYPE_ACCESS);
 #endif /* ACL_TYPE_ACCESS */
