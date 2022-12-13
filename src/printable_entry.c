@@ -53,10 +53,10 @@ char *mx_get_permissions_str(mode_t file_mode, char *path_to_file) {
 #endif /* ACL_TYPE_ACCESS */
     if (has_xattr) {
         permissions_str[10] = '@';
-#ifdef ACL_TYPE_ACCESS
+#ifdef __APPLE__
     } else if (has_acl) {
         permissions_str[10] = '+';
-#endif /* ACL_TYPE_ACCESS */
+#endif /* __APPLE__ */
     } else {
         permissions_str[10] = ' ';
     }
