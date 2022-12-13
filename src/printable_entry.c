@@ -7,10 +7,10 @@ char mx_get_file_type_symbol(mode_t file_mode) {
         return 'c';
     } else if (S_ISDIR(file_mode)) {
         return 'd';
-#ifdef S_ISLNK
+// #ifdef S_ISLNK
     } else if (S_ISLNK(file_mode)) {
         return 'l';
-#endif /* S_ISLNK */
+// #endif /* S_ISLNK */
 #ifdef S_ISSOCK
     } else if (S_ISSOCK(file_mode)) {
         return 's';
