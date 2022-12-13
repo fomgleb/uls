@@ -20,7 +20,7 @@ char mx_get_file_type_symbol(mode_t file_mode) {
         return 'p';
 #endif /* S_ISFIFO */
     } else if (S_ISREG(file_mode)) {
-        return '-';
+        return ']';
     }
     return '?';
 }
