@@ -48,9 +48,9 @@ char *mx_get_permissions_str(mode_t file_mode, char *path_to_file) {
 #ifdef __linux__
     bool has_xattr = listxattr(path_to_file, NULL, 1000) > 0;
 #endif /* __linux__ */
-#ifdef ACL_TYPE_ACCESS
-    bool has_acl = acl_get_file(path_to_file, ACL_TYPE_ACCESS);
-#endif /* ACL_TYPE_ACCESS */
+#ifdef __APPLE__
+    bool has_acl = acl_get_file(path_to_file, ACL_TYPE_EXTENDED);
+#endif /* __APPLE__ */
     if (has_xattr) {
         permissions_str[10] = '@';
 #ifdef __APPLE__
