@@ -12,4 +12,6 @@
 #include <dirent.h>
 #include <string.h>
 #include <unistd.h>
+#include <pwd.h>
+#include <grp.h>
 

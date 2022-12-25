@@ -6,7 +6,7 @@
 #include "entry.h"
 #include "args_error.h"
 #include "flags.h"
-#include "printable_entry.h"
+#include "extended_entry.h"
 
 void mx_prepare_args(t_args *args, const char *existing_args);
 t_list *mx_find_entries_list(t_list *input_entry_names, t_flags flags);

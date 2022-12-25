@@ -1,4 +1,4 @@
-#include "../inc/printable_entry.h"
+#include "../inc/extended_entry.h"
 
 char mx_get_file_type_symbol(mode_t file_mode) {
     if (S_ISBLK(file_mode)) {
@@ -20,7 +20,7 @@ char mx_get_file_type_symbol(mode_t file_mode) {
         return 'p';
 #endif /* S_ISFIFO */
     } else if (S_ISREG(file_mode)) {
-        return ']';
+        return '-';
     }
     return '?';
 }
@@ -63,4 +63,20 @@ char *mx_get_permissions_str(mode_t file_mode, char *path_to_file) {
 
     return permissions_str;
 }
+
+unsigned int mx_get_number_of_links(t_entry entry) {
+    return entry.stat.st_nlink;
+}
+
+char *mx_get_owner_name(uid_t user_id) {
+    struct passwd *owner_information = getpwuid(user_id);
+    return mx_strdup(owner_information->pw_name);
+}
+
+char *mx_get_group_name(gid_t group_id) {
+    struct group *group_information = getgrgid(group_id);
+    return mx_strdup(group_information->gr_name);
+}
+
+// long int mx_get_number_of_bytes()
 

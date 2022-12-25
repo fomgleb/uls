@@ -9,13 +9,10 @@ int main(int argc, char **argv) {
     t_list *entries_list = mx_find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
     mx_print_entries_list(entries_list, flags);
-    
 
     mx_free_main_variables(args, entries_list);
 
     return 0;
-
-    
 }
 
 void mx_prepare_args(t_args *args, const char *existing_args) {
@@ -97,24 +94,39 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags) {
 }
 
 void mx_print_entries_list(t_list *entries_list, t_flags flags) {
-    if (flags.l) {
-        int sum_of_file_sizes = 0;
-        for (t_list *i = entries_list; i != NULL; i = i->next) {
-            for (t_list *j = (*(t_entry *)i->data).entries_list; j != NULL; j = j->next) {
-                sum_of_file_sizes += (*(t_entry *)j->data).stat.st_blocks;
-            }
-        }
-        mx_printstr("total ");
-        mx_printint(sum_of_file_sizes);
-        mx_printchar(' ');
-        for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
-            t_entry entry = *(t_entry *)i->data;
-            mx_printstr(mx_get_permissions_str(entry.stat.st_mode, entry.relative_path));
-            mx_printchar(' ');
-            mx_printstr(entry.relative_path);
-            mx_printchar('\n');
-        }
+
+    for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
+        t_entry *entry = i->data;
+        mx_printstr(entry->relative_path);
+        mx_printstr("\tst_size=");
+        mx_printint(entry->stat.st_size);
+        mx_printstr("\tst_blksize=");
+        mx_printint(entry->stat.st_blksize);
+        mx_printstr("\tst_blocks=");
+        mx_printint(entry->stat.st_blocks);
+        mx_printchar('\n');
     }
+
+    (void)flags;
+
+    // if (flags.l) {
+    //     int sum_of_file_sizes = 0;
+    //     for (t_list *i = entries_list; i != NULL; i = i->next) {
+    //         for (t_list *j = (*(t_entry *)i->data).entries_list; j != NULL; j = j->next) {
+    //             sum_of_file_sizes += (*(t_entry *)j->data).stat.st_blocks;
+    //         }
+    //     }
+    //     mx_printstr("total ");
+    //     mx_printint(sum_of_file_sizes);
+    //     mx_printchar(' ');
+    //     for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
+    //         t_entry entry = *(t_entry *)i->data;
+    //         mx_printstr(mx_get_permissions_str(entry.stat.st_mode, entry.relative_path));
+    //         mx_printchar(' ');
+    //         mx_printstr(entry.relative_path);
+    //         mx_printchar('\n');
+    //     }
+    // }
 
     // for (t_list *i = entries_list; i != NULL; i = i->next) {
     //     t_entry entry = *(t_entry *)i->data;
