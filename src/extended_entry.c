@@ -1,5 +1,16 @@
 #include "../inc/extended_entry.h"
 
+unsigned int mx_get_total_allocated_blocks(t_list *entries_list) {
+    unsigned int total_allocated_blocks = 0;
+    for (t_list *i = entries_list; i != NULL; i = i->next) {
+        total_allocated_blocks += (*(t_entry *)i->data).stat.st_blocks;
+    }
+#ifdef __linux__
+    total_allocated_blocks /= 2;
+#endif /* __linux__ */
+    return total_allocated_blocks;
+}
+
 char mx_get_file_type_symbol(mode_t file_mode) {
     if (S_ISBLK(file_mode)) {
         return 'b';
