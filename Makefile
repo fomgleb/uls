@@ -1,6 +1,6 @@
 BINARYNAME = uls
 CC = clang
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -g
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
 OBJDIR = obj
 SRCDIR = src
 SOURCES = $(wildcard $(SRCDIR)/*.c)

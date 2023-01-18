@@ -1,7 +1,7 @@
 #include "../inc/extended_entry.h"
 
-unsigned int mx_get_total_allocated_blocks(t_list *entries_list) {
-    unsigned int total_allocated_blocks = 0;
+long int mx_get_total_allocated_blocks(t_list *entries_list) {
+    long int total_allocated_blocks = 0;
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         total_allocated_blocks += (*(t_entry *)i->data).stat.st_blocks;
     }
@@ -75,7 +75,7 @@ char *mx_get_permissions_str(mode_t file_mode, char *path_to_file) {
     return permissions_str;
 }
 
-unsigned int mx_get_number_of_links(t_entry entry) {
+unsigned long int mx_get_number_of_links(t_entry entry) {
     return entry.stat.st_nlink;
 }
 
@@ -89,5 +89,11 @@ char *mx_get_group_name(gid_t group_id) {
     return mx_strdup(group_information->gr_name);
 }
 
-// long int mx_get_number_of_bytes()
+long int mx_get_number_of_bytes(struct stat *stat_ptr) {
+    return stat_ptr->st_size;
+}
+
+char *mx_get_month(t_entry *entry_ptr) {
+    
+}
 

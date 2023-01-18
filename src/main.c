@@ -95,6 +95,12 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags) {
 
 void mx_print_entries_list(t_list *entries_list, t_flags flags) {
 
+    for (t_list *i = entries_list; i != NULL; i = i->next)
+    {
+        
+    }
+    
+
     mx_printstr("total=");
     mx_printint(mx_get_total_allocated_blocks(((t_entry *)entries_list->data)->entries_list));
 
