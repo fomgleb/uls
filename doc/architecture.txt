@@ -49,6 +49,7 @@ More information about entry:
     int lstat(const char *pathname, struct stat *statbuf);
     struct passwd *getpwuid(uid_t uid);
     struct group *getgrgid(gid_t gid);
+    ssize_t listxattr(const char *path, char *namebuf, size_t size, int options);
 
 ################################################## SYSTEM STRUCTURES: ##################################################
 
@@ -126,16 +127,15 @@ There are three types of flags.
         -e - Print the Access Control List (ACL) associated with the file, if present, in long (-l) output;
         -@ - Display extended attribute keys and sizes in long (-l) output;
         -c - Use time when file status was last changed for sorting (-t) or long printing (-l);
-        -e - Print the Access Control List (ACL) associated with the file, if present, in long (-l) output;
         -T - When used with the -l (lowercase letter ``ell'') option, display complete time information for the file, including month, day,
              hour, minute, second, and year.
+        -h - Sizes are human readable;
     3.2 Output modes:
         -C - Force multi-column output; this is the default when output is to a terminal;
         -1 - (The numeric digit ``one''.) Force output to be one entry per line. This is the default when output is not to a terminal;
         -m - Stream output format; list files across the page, separated by commas;
         ✖ -x - The same as -C, except that the multi-column output is produced with entries sorted across, rather than down, the columns;
     ✖ -H - Symbolic links on the command line are followed.  This option is assumed if none of the -F, -d, or -l options are specified.
-    -h - Sizes are human readable;
     ✖ -B - Force printing of non-printable characters (as defined by ctype(3) and current locale settings) in file names as \xxx, 
             where xxx is the numeric value of the character in octal;
     ✖ -b - As -B, but use C escape codes whenever possible;

@@ -4,7 +4,7 @@ t_entry mx_create_entry(char *relative_path) {
     t_entry entry;
     entry.relative_path = mx_strdup(relative_path);
     entry.dirent = NULL;
-    stat(relative_path, &entry.stat);
+    lstat(relative_path, &entry.stat);
     entry.entries_list = NULL;
     return entry;
 }
