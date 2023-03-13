@@ -93,7 +93,7 @@ long int mx_get_number_of_bytes(struct stat *stat_ptr) {
     return stat_ptr->st_size;
 }
 
-char *mx_get_month(t_entry *entry_ptr) {
+// char *mx_get_month(t_entry *entry_ptr) {
     
-}
+// }
 
