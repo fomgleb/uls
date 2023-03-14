@@ -1,34 +1,63 @@
 BINARYNAME = uls
+
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -g
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -gdwarf-4 -MMD -MP
+
 OBJDIR = obj
 SRCDIR = src
-SOURCES = $(wildcard $(SRCDIR)/*.c)
-OBJECTS = $(addprefix $(OBJDIR)/,$(notdir $(SOURCES:.c=.o)))
+LIBMX_DIR = libmx
 
-all: $(SOURCES) $(BINARYNAME)
+SOURCES = $(subst ./,,$(shell find $(SRCDIR) -name "*.c"))
+OBJECTS = $(subst $(SRCDIR)/,,$(addprefix $(OBJDIR)/, $(SOURCES:.c=.o)))
+DEPENDS = $(subst $(SRCDIR)/,,$(addprefix $(OBJDIR)/, $(SOURCES:.c=.d)))
 
-$(BINARYNAME): create_objdir $(OBJECTS)
-	make -C libmx
-	$(CC) $(CFLAGS) $(OBJECTS) -Llibmx -lmx -o $@
+LIBMX_LIB = $(LIBMX_DIR)/libmx.a
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-	
-uninstall: clean
-	rm -rf $(BINARYNAME)
+INCLUDE_LIBMX = -L$(dir $(LIBMX_LIB)) -l$(patsubst lib%.a,%,$(notdir $(LIBMX_LIB)))
 
+define make_command
+	@make --no-print-directory -C
+endef
+
+PHONY := all
+all: $(BINARYNAME)
+	@:
+
+$(BINARYNAME): $(SOURCES) $(OBJDIR) $(OBJECTS)
+	$(make_command) $(LIBMX_DIR)
+	@$(CC) $(CFLAGS) $(OBJECTS) $(INCLUDE_LIBMX) -o $@
+	@printf "$(notdir $@)\tcreated\n"
+
+-include $(DEPENDS)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c Makefile
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR):
+	@mkdir -p $@
+
+PHONY += clean
 clean:
-	rm -rf $(OBJDIR)
+	@rm -rf $(OBJDIR)
+	@printf "$(notdir $(BINARYNAME))\t$@\n"
+	
+PHONY += uninstall
+uninstall: clean
+	@rm -rf $(BINARYNAME)
+	@printf "$(notdir $(BINARYNAME))\t$@\n"
 
+PHONY += reinstall
 reinstall: uninstall all
 
-create_objdir:
-	mkdir -p $(OBJDIR)
+PHONY += uninstall_with_libs
+uninstall_with_libs:
+	$(make_command) $(LIBMX_DIR) uninstall
+	$(make_command) . uninstall
 
-#!/bin/sh -e
-#clang -std=c11 -Wall -Wextra -Werror -Wpedantic -c *.c
-#ar cr minilibmx.a *.o
-#rm -f *.o
-#ranlib minilibmx.a
+PHONY += reinstall_with_libs
+reinstall_with_libs:
+	$(make_command) $(LIBMX_DIR) reinstall
+	$(make_command) . reinstall
 
+.PHONY: $(PHONY)

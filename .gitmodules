@@ -1,0 +1,4 @@
+[submodule "libmx"]
+	path = libmx
+	url = https://github.com/fomgleb/libmx
+	branch = main
