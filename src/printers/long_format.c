@@ -34,6 +34,18 @@ static void print_hours_and_minutes(char *human_readable_time) {
     mx_printnstr(human_readable_time + 11, 5);
 }
 
+static void print_year(char *human_readable_time) {
+    mx_printnstr(human_readable_time + 20, 4);
+}
+
+static time_t calculate_difference_between_times(time_t time1, time_t time2) {
+    if (time1 > time2) {
+        return time1 - time2;
+    } else {
+        return time2 - time1;
+    }
+}
+
 void mx_print_long_formatted_entry(t_entry entry) {
     print_entry_permissions(entry);
     mx_printchar(' ');
@@ -45,12 +57,16 @@ void mx_print_long_formatted_entry(t_entry entry) {
     mx_printchar(' ');
     print_number_of_entry_bytes(entry);
     mx_printchar(' ');
-    char *human_readable_time = ctime(&entry.stat.st_mtimespec.tv_sec);
+    char *human_readable_time = ctime(&entry.stat.st_mtime);
     print_month(human_readable_time);
     mx_printchar(' ');
     print_month_day(human_readable_time);
     mx_printchar(' ');
-    print_hours_and_minutes(human_readable_time);
+    if (calculate_difference_between_times(entry.stat.st_mtime, time(NULL)) > SECONDS_IN_HALF_YEAR) {
+        print_year(human_readable_time);
+    } else {
+        print_hours_and_minutes(human_readable_time);
+    }
     mx_printchar(' ');
     mx_printstr(entry.relative_path);
     mx_printchar('\n');
