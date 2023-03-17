@@ -1,7 +1,8 @@
 #include "../inc/main.h"
 
 int main(int argc, char **argv) {
-    const char *EXISTING_FLAGS = "ARSUacdflrtu";
+    // const char *EXISTING_FLAGS = "ARSUacdflrtu";
+    const char *EXISTING_FLAGS = "l";
 
     t_args args = mx_convert_to_args(argc, argv);
     mx_prepare_args(&args, EXISTING_FLAGS);
@@ -94,48 +95,16 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags) {
 }
 
 void mx_print_entries_list(t_list *entries_list, t_flags flags) {
-
-    for (t_list *i = entries_list; i != NULL; i = i->next)
-    {
-        
-    }
-    
-
-    mx_printstr("total=");
-    mx_printint(mx_get_total_allocated_blocks(((t_entry *)entries_list->data)->entries_list));
-
-    for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
-        t_entry *entry = i->data;
-        mx_printstr(entry->relative_path);
-        mx_printstr("\tst_size=");
-        mx_printint(entry->stat.st_size);
-        mx_printstr("\tst_blksize=");
-        mx_printint(entry->stat.st_blksize);
-        mx_printstr("\tst_blocks=");
-        mx_printint(entry->stat.st_blocks);
+    if (flags.l) {
+        long int total_allocated_blocks = mx_get_total_allocated_blocks(entries_list);
+        mx_printstr("total ");
+        mx_printint(total_allocated_blocks);
         mx_printchar('\n');
+        for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
+            t_entry entry = *(t_entry *)i->data;
+            mx_print_long_formatted_entry(entry);
+        }
     }
-
-    (void)flags;
-
-    // if (flags.l) {
-    //     int sum_of_file_sizes = 0;
-    //     for (t_list *i = entries_list; i != NULL; i = i->next) {
-    //         for (t_list *j = (*(t_entry *)i->data).entries_list; j != NULL; j = j->next) {
-    //             sum_of_file_sizes += (*(t_entry *)j->data).stat.st_blocks;
-    //         }
-    //     }
-    //     mx_printstr("total ");
-    //     mx_printint(sum_of_file_sizes);
-    //     mx_printchar(' ');
-    //     for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
-    //         t_entry entry = *(t_entry *)i->data;
-    //         mx_printstr(mx_get_permissions_str(entry.stat.st_mode, entry.relative_path));
-    //         mx_printchar(' ');
-    //         mx_printstr(entry.relative_path);
-    //         mx_printchar('\n');
-    //     }
-    // }
 
     // for (t_list *i = entries_list; i != NULL; i = i->next) {
     //     t_entry entry = *(t_entry *)i->data;

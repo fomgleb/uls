@@ -7,6 +7,7 @@
 #include "args_error.h"
 #include "flags.h"
 #include "extended_entry.h"
+#include "printers.h"
 
 typedef struct s_printable_extended_entry {
     char *file_mode;
