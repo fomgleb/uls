@@ -22,6 +22,18 @@ static void print_number_of_entry_bytes(t_entry entry) {
     mx_printint(entry.stat.st_size);
 }
 
+static void print_month(char *human_readable_time) {
+    mx_printnstr(human_readable_time + 4, 3);
+}
+
+static void print_month_day(char *human_readable_time) {
+    mx_printnstr(human_readable_time + 8, 2);
+}
+
+static void print_hours_and_minutes(char *human_readable_time) {
+    mx_printnstr(human_readable_time + 11, 5);
+}
+
 void mx_print_long_formatted_entry(t_entry entry) {
     print_entry_permissions(entry);
     mx_printchar(' ');
@@ -33,7 +45,12 @@ void mx_print_long_formatted_entry(t_entry entry) {
     mx_printchar(' ');
     print_number_of_entry_bytes(entry);
     mx_printchar(' ');
-    mx_printint(entry.stat.st_mtime);
+    char *human_readable_time = ctime(&entry.stat.st_mtimespec.tv_sec);
+    print_month(human_readable_time);
+    mx_printchar(' ');
+    print_month_day(human_readable_time);
+    mx_printchar(' ');
+    print_hours_and_minutes(human_readable_time);
     mx_printchar(' ');
     mx_printstr(entry.relative_path);
     mx_printchar('\n');
