@@ -118,7 +118,7 @@ void mx_print_long_formatted_entry(t_entry entry, t_long_format_column_sizes col
     } else {
         print_hours_and_minutes_with_indent(human_readable_time);
     }
-    mx_printstr(entry.dirent->d_name);
+    mx_printstr(entry.dirent != NULL ? entry.dirent->d_name : entry.relative_path);
     if (S_ISLNK(entry.stat.st_mode)) {
         mx_printstr(" -> ");
         print_link_content(entry);
