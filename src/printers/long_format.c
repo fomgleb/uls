@@ -38,6 +38,12 @@ static void print_year(char *human_readable_time) {
     mx_printnstr(human_readable_time + 20, 4);
 }
 
+static void print_link_content(t_entry entry) {
+    char link_content[1024];
+    ssize_t link_content_len = readlink(entry.relative_path, link_content, 1024);
+    mx_printnstr(link_content, link_content_len);
+}
+
 static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     if (time1 > time2) {
         return time1 - time2;
@@ -69,6 +75,10 @@ void mx_print_long_formatted_entry(t_entry entry) {
     }
     mx_printchar(' ');
     mx_printstr(entry.dirent->d_name);
+    if (S_ISLNK(entry.stat.st_mode)) {
+        mx_printstr(" -> ");
+        print_link_content(entry);
+    }
     mx_printchar('\n');
 }
 
