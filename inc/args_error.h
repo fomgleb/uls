@@ -19,6 +19,5 @@ typedef struct s_args_error {
 t_args_error mx_create_args_error(void);
 void mx_free_args_error(t_args_error args_error);
 
-t_args_error mx_validate_args(t_args args, const char *existing_flags);
+t_args_error mx_validate_args(const t_args *const restrict args, const char *const restrict existing_flags);
 void mx_print_args_error(t_args_error args_error, const char *existing_flags);
-

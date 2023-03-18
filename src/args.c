@@ -1,9 +1,10 @@
 #include "../inc/args.h"
 
 t_args mx_create_args(void) {
-    t_args new_args;
-    new_args.entry_names_list = NULL;
-    new_args.flags_str = NULL;
+    t_args new_args = {
+        .entry_names_list = NULL,
+        .flags_str = NULL
+    };
     return new_args;
 }
 
@@ -16,7 +17,7 @@ void mx_free_args(t_args args) {
     free(args.flags_str);
 }
 
-t_args mx_convert_to_args(int argc, char **argv) {
+t_args mx_convert_to_args(const int argc, const char *const*const argv) {
     t_args new_args = mx_create_args();
 
     int argv_index = 1;
