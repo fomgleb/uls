@@ -96,15 +96,27 @@ void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags) {
 
 void mx_print_entries_list(t_list *entries_list, t_flags flags) {
     if (flags.l) {
-        t_long_format_column_sizes long_format_column_sizes = mx_calculate_long_format_column_sizes((*(t_entry *)entries_list->data).entries_list);
+        for (t_list *i = entries_list; i != NULL; i = i->next) {
+            t_entry i_entry = *(t_entry *)i->data;
 
-        long int total_allocated_blocks = mx_get_total_allocated_blocks((*(t_entry *)entries_list->data).entries_list);
-        mx_printstr("total ");
-        mx_printint(total_allocated_blocks);
-        mx_printchar('\n');
-        for (t_list *i = (*(t_entry *)entries_list->data).entries_list; i != NULL; i = i->next) {
-            t_entry entry = *(t_entry *)i->data;
-            mx_print_long_formatted_entry(entry, long_format_column_sizes);
+            if (mx_list_size(entries_list) > 1) {
+                mx_printstr(i_entry.relative_path);
+                mx_printstr(":\n");
+            }
+
+            t_long_format_column_sizes long_format_column_sizes = mx_calculate_long_format_column_sizes(i_entry.entries_list);
+            long int total_allocated_blocks = mx_get_total_allocated_blocks(i_entry.entries_list);
+            mx_printstr("total ");
+            mx_printint(total_allocated_blocks);
+            mx_printchar('\n');
+            for (t_list *j = i_entry.entries_list; j != NULL; j = j->next) {
+                t_entry entry = *(t_entry *)j->data;
+                mx_print_long_formatted_entry(entry, long_format_column_sizes);
+            }
+
+            if (i->next != NULL) {
+                mx_printchar('\n');
+            }
         }
     }
 
