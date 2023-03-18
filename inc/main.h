@@ -4,7 +4,6 @@
 #include "base_defines.h"
 #include "args.h"
 #include "entry.h"
-#include "args_error.h"
 #include "flags.h"
 #include "extended_entry.h"
 #include "printers.h"
