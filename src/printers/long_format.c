@@ -68,7 +68,7 @@ void mx_print_long_formatted_entry(t_entry entry) {
         print_hours_and_minutes(human_readable_time);
     }
     mx_printchar(' ');
-    mx_printstr(entry.relative_path);
+    mx_printstr(entry.dirent->d_name);
     mx_printchar('\n');
 }
 
