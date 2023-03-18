@@ -54,7 +54,7 @@ char *mx_get_permissions_str(mode_t file_mode, char *path_to_file) {
         permissions_str[9] = (file_mode & S_IXOTH) ? 't' : 'T';
 #endif /* S_ISVTX */
 #ifdef __APPLE__
-    bool has_xattr = listxattr(path_to_file, NULL, 1000, 0) > 0;
+    bool has_xattr = listxattr(path_to_file, NULL, 10000, XATTR_NOFOLLOW) > 0;
 #endif /* __APPLE__ */
 #ifdef __linux__
     bool has_xattr = listxattr(path_to_file, NULL, 1000) > 0;
