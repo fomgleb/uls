@@ -88,6 +88,7 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags
 }
 
 static void mx_print_entries_list(t_list *entries_list, t_flags flags) {
+    int entries_list_size = mx_list_size(entries_list);
     t_list *files_list = NULL;
     t_list *directories_list = NULL;
 
@@ -103,13 +104,15 @@ static void mx_print_entries_list(t_list *entries_list, t_flags flags) {
                 t_entry file = *(t_entry *)i->data;
                 mx_print_long_formatted_entry(file, column_sizes);
             }
-            mx_printchar('\n');
+            if (entries_list_size > 1) {
+                mx_printchar('\n');
+            }
         }
 
         for (t_list *i = directories_list; i != NULL; i = i->next) {
             t_entry directory = *(t_entry *)i->data;
 
-            if (mx_list_size(entries_list) > 1) {
+            if (entries_list_size > 1) {
                 mx_printstr(directory.relative_path);
                 mx_printstr(":\n");
             }
