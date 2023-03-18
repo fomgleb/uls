@@ -9,4 +9,4 @@ typedef struct s_args {
 
 t_args mx_create_args(void);
 void mx_free_args(t_args args); 
-t_args mx_convert_to_args(int argc, char **argv);
+t_args mx_convert_to_args(const int argc, const char *const*const argv);
