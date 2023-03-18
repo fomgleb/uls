@@ -104,7 +104,7 @@ static void mx_print_entries_list(t_list *entries_list, t_flags flags) {
                 t_entry file = *(t_entry *)i->data;
                 mx_print_long_formatted_entry(file, column_sizes);
             }
-            if (entries_list_size > 1) {
+            if (directories_list != NULL) {
                 mx_printchar('\n');
             }
         }
