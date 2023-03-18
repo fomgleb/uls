@@ -129,6 +129,9 @@ static void mx_print_entries_list(t_list *entries_list, t_flags flags) {
             }
         }
     }
+
+    mx_clear_list(&files_list);
+    mx_clear_list(&directories_list);
 }
 
 int main(int argc, char **argv) {
