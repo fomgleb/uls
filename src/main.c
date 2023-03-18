@@ -1,22 +1,6 @@
 #include "../inc/main.h"
 
-int main(int argc, char **argv) {
-    // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "l";
-
-    t_args args = mx_convert_to_args(argc, argv);
-    mx_prepare_args(&args, EXISTING_FLAGS);
-    t_flags flags = mx_create_flags(args.flags_str);
-    t_list *entries_list = mx_find_entries_list(args.entry_names_list, flags);
-    mx_sort_entries_list_recursively(entries_list, flags);
-    mx_print_entries_list(entries_list, flags);
-
-    mx_free_main_variables(args, entries_list);
-
-    return 0;
-}
-
-void mx_prepare_args(t_args *args, const char *existing_args) {
+static void mx_prepare_args(t_args *args, const char *existing_args) {
     t_args_error args_error = mx_validate_args(*args, existing_args);
 
     mx_print_args_error(args_error, existing_args);
@@ -39,6 +23,24 @@ void mx_prepare_args(t_args *args, const char *existing_args) {
 
     mx_free_args_error(args_error);
 }
+
+int main(int argc, char **argv) {
+    // const char *EXISTING_FLAGS = "ARSUacdflrtu";
+    const char *EXISTING_FLAGS = "l";
+
+    t_args args = mx_convert_to_args(argc, argv);
+    mx_prepare_args(&args, EXISTING_FLAGS);
+    t_flags flags = mx_create_flags(args.flags_str);
+    t_list *entries_list = mx_find_entries_list(args.entry_names_list, flags);
+    mx_sort_entries_list_recursively(entries_list, flags);
+    mx_print_entries_list(entries_list, flags);
+
+    mx_free_main_variables(args, entries_list);
+
+    return 0;
+}
+
+
 
 t_list *mx_find_entries_list(t_list *input_entry_names_list, t_flags flags) {
     t_list *entries_list = NULL;
