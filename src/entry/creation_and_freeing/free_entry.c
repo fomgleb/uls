@@ -1,4 +1,4 @@
-#include "../../inc/entry.h"
+#include "../../../inc/entry.h"
 
 void mx_free_entry(t_entry entry) {
     free(entry.relative_path);

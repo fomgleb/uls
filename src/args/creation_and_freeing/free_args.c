@@ -1,4 +1,4 @@
-#include "../../inc/args.h"
+#include "../../../inc/args.h"
 
 void mx_free_args(t_args args) {
     for (t_list *node = args.entry_names_list; node != NULL; node = node->next) {

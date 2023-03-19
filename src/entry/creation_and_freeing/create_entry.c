@@ -1,4 +1,4 @@
-#include "../../inc/entry.h"
+#include "../../../inc/entry.h"
 
 t_entry mx_create_entry(char *relative_path) {
     t_entry entry;
