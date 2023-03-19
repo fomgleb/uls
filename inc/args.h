@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base_includes.h"
-#include "base_defines.h"
 
 typedef struct s_args {
     t_list *entry_names_list;
@@ -19,6 +18,9 @@ typedef struct s_args_error {
     t_list *invalid_entry_names_list;
     char illegal_flag;
 } t_args_error;
+
+#define NON_EXISTENT_ENTRY_MESSAGE "No such file or directory"
+#define PROGRAM_NAME "uls"
 
 t_args mx_convert_to_args(const int argc, const char *const*const argv);
 
