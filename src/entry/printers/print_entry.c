@@ -66,12 +66,12 @@ static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     }
 }
 
-void mx_print_long_formatted_entry(t_entry entry, t_long_format_column_sizes column_sizes) {
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes) {
     print_entry_permissions_with_indent(&entry);
-    print_number_of_entry_links_with_indent(&entry, column_sizes.number_of_links_size);
-    print_owner_name_with_indent(&entry, column_sizes.owner_name_size);
-    print_group_name_with_indent(&entry, column_sizes.group_name_size);
-    print_number_of_entry_bytes(&entry, column_sizes.number_of_bytes_size);
+    print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
+    print_owner_name_with_indent(&entry, column_sizes[1]);
+    print_group_name_with_indent(&entry, column_sizes[2]);
+    print_number_of_entry_bytes(&entry, column_sizes[3]);
     char *human_readable_time = ctime(&entry.stat.st_mtime);
     print_month_with_indent(human_readable_time);
     print_month_day_with_indent(human_readable_time);
