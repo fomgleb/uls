@@ -2,8 +2,6 @@
 
 #include "base_includes.h"
 #include "entry.h"
-#include "extended_entry.h"
-#include "time.h"
 
 #define SECONDS_IN_HALF_YEAR 15768000
 
