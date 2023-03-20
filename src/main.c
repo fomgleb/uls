@@ -87,16 +87,38 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags
     }
 }
 
+static t_output_format get_output_format(t_flags flags) {
+    bool output_is_to_terminal = isatty(STDOUT_FILENO);
+    int flag = flags.C > flags.one ? flags.C : flags.one > flags.C ? flags.one : (flags.l > flags.one && flags.l > flags.C) ? flags.l : -1;
+    if (output_is_to_terminal) {
+        if (flag == (int)flags.one) {
+            return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
+        } else if (flag == (int)flags.l) {
+            return LONG_OUTPUT_FORMAT;
+        } else {
+            return MULTI_COLUMN_OUTPUT_FORMAT;
+        }
+    } else {
+        if (flag == (int)flags.C) {
+            return MULTI_COLUMN_OUTPUT_FORMAT;
+        } else if (flag == (int)flags.l) {
+            return LONG_OUTPUT_FORMAT;
+        } else {
+            return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
+        }
+    }
+}
+
 int main(int argc, char **argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "l";
+    const char *EXISTING_FLAGS = "Cl";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     prepare_args(&args, EXISTING_FLAGS);
     t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
-    mx_print_entries(entries_list, flags);
+    mx_print_entries(entries_list, get_output_format(flags), flags.G ? COLORIZED_OUTPUT : 0);
 
     free_main_variables(args, entries_list);
 
