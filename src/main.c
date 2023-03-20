@@ -89,7 +89,7 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags
 
 static t_output_format get_output_format(t_flags flags) {
     bool output_is_to_terminal = isatty(STDOUT_FILENO);
-    int flag = flags.C > flags.one ? flags.C : flags.one > flags.C ? flags.one : (flags.l > flags.one && flags.l > flags.C) ? flags.l : -1;
+    int flag = MAX3(flags.C, flags.one, flags.l);
     if (output_is_to_terminal) {
         if (flag == (int)flags.one) {
             return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;

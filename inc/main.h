@@ -13,3 +13,6 @@ typedef struct s_printable_extended_entry {
     long int bytes_count;
     
 } t_printable_extended_entry;
+
+#define MAX2(a, b) (a > b ? a : b)
+#define MAX3(a, b, c) (MAX2(MAX2(a, b), c))
