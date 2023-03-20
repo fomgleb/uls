@@ -48,9 +48,11 @@ static void print_entries_in_columns(t_list *entries_list, char *column_delimite
             ushort converted_index = x * number_of_rows + y;
             if (converted_index < number_of_entries) {
                 t_entry *entry = (t_entry *)mx_get_by_index(entries_list, converted_index)->data;
-                char *printing_str = entry->dirent ? entry->dirent->d_name : entry->relative_path;
-                mx_printstr(printing_str);
-                mx_printnchar(' ', column_width - mx_strlen(printing_str));
+                char *printing_string = entry->dirent ? entry->dirent->d_name : entry->relative_path;
+                size_t printing_string_length = mx_printstr(printing_string);
+                if (x + 1 != number_of_columns) {
+                    mx_printnchar(' ', column_width - printing_string_length);
+                }
             }
         }
         mx_printchar('\n');
