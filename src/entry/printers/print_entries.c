@@ -34,7 +34,7 @@ static float round_up(float number) {
     return converted_number + 1;
 }
 
-static void print_entries_in_columns(t_list *entries_list, size_t column_spacing, ushort terminal_width) {
+static void print_entries_in_columns(t_list *entries_list, size_t column_spacing, ushort terminal_width, bool print_newline_in_the_end) {
     int number_of_entries = mx_list_size(entries_list);
     ushort column_width = get_column_width(entries_list) + column_spacing;
 
@@ -55,6 +55,10 @@ static void print_entries_in_columns(t_list *entries_list, size_t column_spacing
                 }
             }
         }
+        mx_printchar('\n');
+    }
+
+    if (print_newline_in_the_end) {
         mx_printchar('\n');
     }
 }
@@ -78,6 +82,41 @@ static void print_long_formatted_entries(const t_list *const entries_list, const
     }
 }
 
+static void print_long_formatted_files_and_directories(t_list *files_list, t_list *directories_list, size_t all_entries_count) {
+    if (files_list != NULL) {
+        print_long_formatted_entries(files_list, false, directories_list != NULL);
+    }
+
+    for (t_list *i = directories_list; i != NULL; i = i->next) {
+        t_entry directory = *(t_entry *)i->data;
+
+        if (all_entries_count > 1) {
+            mx_printstr(directory.relative_path);
+            mx_printstr(":\n");
+        }
+
+        print_long_formatted_entries(directory.entries_list, true, i->next != NULL);
+    }
+}
+
+static void print_files_and_directories_in_columns(t_list *files_list, t_list *directories_list, size_t all_entries_count, ushort terminal_width, bool colorized) {
+    size_t column_spacing = colorized ? 1 : 8;
+    if (files_list != NULL) {
+        print_entries_in_columns(files_list, column_spacing, terminal_width, directories_list != NULL);
+    }
+
+    for (t_list *i = directories_list; i != NULL; i = i->next) {
+        t_entry *directory = (t_entry *)i->data;
+
+        if (all_entries_count > 1) {
+            mx_printstr(directory->relative_path);
+            mx_printstr(":\n");
+        }
+
+        print_entries_in_columns(directory->entries_list, column_spacing, terminal_width, i->next != NULL);
+    }
+}
+
 void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags) {
     int entries_list_size = mx_list_size(entries_list);
     t_list *files_list = NULL;
@@ -89,46 +128,12 @@ void mx_print_entries(t_list *entries_list, t_output_format output_format, t_pri
     }
 
     if (output_format == LONG_OUTPUT_FORMAT) {
-        if (files_list != NULL) {
-            print_long_formatted_entries(files_list, false, directories_list != NULL);
-        }
-
-        for (t_list *i = directories_list; i != NULL; i = i->next) {
-            t_entry directory = *(t_entry *)i->data;
-
-            if (entries_list_size > 1) {
-                mx_printstr(directory.relative_path);
-                mx_printstr(":\n");
-            }
-
-            print_long_formatted_entries(directory.entries_list, true, i->next != NULL);
-        }
+        print_long_formatted_files_and_directories(files_list, directories_list, entries_list_size);
     } else {
         ushort terminal_width = get_terminal_width();
 
         if (output_format == MULTI_COLUMN_OUTPUT_FORMAT) {
-            size_t column_spacing = print_entries_flags & COLORIZED_OUTPUT ? 1 : 8;
-            if (files_list != NULL) {
-                print_entries_in_columns(files_list, column_spacing, terminal_width);
-                if (directories_list != NULL) {
-                    mx_printchar('\n');
-                }
-            }
-
-            for (t_list *i = directories_list; i != NULL; i = i->next) {
-                t_entry *directory = (t_entry *)i->data;
-
-                if (entries_list_size > 1) {
-                    mx_printstr(directory->relative_path);
-                    mx_printstr(":\n");
-                }
-
-                print_entries_in_columns(directory->entries_list, column_spacing, terminal_width);
-
-                if (i->next != NULL) {
-                    mx_printchar('\n');
-                }
-            }
+            print_files_and_directories_in_columns(files_list, directories_list, entries_list_size, terminal_width, print_entries_flags & COLORIZED_OUTPUT);
         }
     }
 
