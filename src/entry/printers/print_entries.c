@@ -59,6 +59,25 @@ static void print_entries_in_columns(t_list *entries_list, size_t column_spacing
     }
 }
 
+static void print_long_formatted_entries(const t_list *const entries_list, const bool print_total_number_of_512_byte_blocks, const bool print_newline_in_the_end) {
+    if (print_total_number_of_512_byte_blocks) {
+        mx_printstr("total ");
+        mx_printint(mx_get_total_allocated_blocks((t_list *)entries_list));
+        mx_printchar('\n');
+    }
+
+    size_t *column_sizes = mx_calculate_long_format_column_sizes((t_list *)entries_list);
+    for (const t_list *j = entries_list; j != NULL; j = j->next) {
+        t_entry entry = *(t_entry *)j->data;
+        mx_print_long_formatted_entry(entry, column_sizes);
+    }
+    free(column_sizes);
+
+    if (print_newline_in_the_end) {
+        mx_printchar('\n');
+    }
+}
+
 void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags) {
     int entries_list_size = mx_list_size(entries_list);
     t_list *files_list = NULL;
@@ -71,15 +90,7 @@ void mx_print_entries(t_list *entries_list, t_output_format output_format, t_pri
 
     if (output_format == LONG_OUTPUT_FORMAT) {
         if (files_list != NULL) {
-            size_t *column_sizes = mx_calculate_long_format_column_sizes(files_list);
-            for (t_list *i = files_list; i != NULL; i = i->next) {
-                t_entry file = *(t_entry *)i->data;
-                mx_print_long_formatted_entry(file, column_sizes);
-            }
-            free(column_sizes);
-            if (directories_list != NULL) {
-                mx_printchar('\n');
-            }
+            print_long_formatted_entries(files_list, false, directories_list != NULL);
         }
 
         for (t_list *i = directories_list; i != NULL; i = i->next) {
@@ -90,20 +101,7 @@ void mx_print_entries(t_list *entries_list, t_output_format output_format, t_pri
                 mx_printstr(":\n");
             }
 
-            size_t *column_sizes = mx_calculate_long_format_column_sizes(directory.entries_list);
-            long int total_allocated_blocks = mx_get_total_allocated_blocks(directory.entries_list);
-            mx_printstr("total ");
-            mx_printint(total_allocated_blocks);
-            mx_printchar('\n');
-            for (t_list *j = directory.entries_list; j != NULL; j = j->next) {
-                t_entry entry = *(t_entry *)j->data;
-                mx_print_long_formatted_entry(entry, column_sizes);
-            }
-            free(column_sizes);
-
-            if (i->next != NULL) {
-                mx_printchar('\n');
-            }
+            print_long_formatted_entries(directory.entries_list, true, i->next != NULL);
         }
     } else {
         ushort terminal_width = get_terminal_width();
