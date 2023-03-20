@@ -34,9 +34,9 @@ static float round_up(float number) {
     return converted_number + 1;
 }
 
-static void print_entries_in_columns(t_list *entries_list, char *column_delimiter, ushort terminal_width) {
+static void print_entries_in_columns(t_list *entries_list, size_t column_spacing, ushort terminal_width) {
     int number_of_entries = mx_list_size(entries_list);
-    ushort column_width = get_column_width(entries_list) + mx_strlen(column_delimiter);
+    ushort column_width = get_column_width(entries_list) + column_spacing;
 
     ushort number_of_rows = round_up(number_of_entries / round_down((float)terminal_width / column_width));
     float average_number_of_entries_per_row = (float)number_of_entries / number_of_rows;
@@ -109,9 +109,9 @@ void mx_print_entries(t_list *entries_list, t_output_format output_format, t_pri
         ushort terminal_width = get_terminal_width();
 
         if (output_format == MULTI_COLUMN_OUTPUT_FORMAT) {
-            char *column_delimiter = print_entries_flags & COLORIZED_OUTPUT ? " " : "        ";
+            size_t column_spacing = print_entries_flags & COLORIZED_OUTPUT ? 1 : 8;
             if (files_list != NULL) {
-                print_entries_in_columns(files_list, column_delimiter, terminal_width);
+                print_entries_in_columns(files_list, column_spacing, terminal_width);
                 if (directories_list != NULL) {
                     mx_printchar('\n');
                 }
@@ -125,7 +125,7 @@ void mx_print_entries(t_list *entries_list, t_output_format output_format, t_pri
                     mx_printstr(":\n");
                 }
 
-                print_entries_in_columns(directory->entries_list, column_delimiter, terminal_width);
+                print_entries_in_columns(directory->entries_list, column_spacing, terminal_width);
 
                 if (i->next != NULL) {
                     mx_printchar('\n');
