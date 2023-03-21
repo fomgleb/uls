@@ -1,4 +1,4 @@
-#include "../../../inc/uls.h"
+#include "../../../inc/utils.h"
 
 void mx_free_entry(t_entry entry) {
     free(entry.relative_path);
