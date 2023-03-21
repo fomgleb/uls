@@ -34,6 +34,25 @@ static float round_up(float number) {
     return converted_number + 1;
 }
 
+static void print_long_formatted_entries(const t_list *const entries_list, const bool print_total_number_of_512_byte_blocks, const bool print_newline_in_the_end) {
+    if (print_total_number_of_512_byte_blocks) {
+        mx_printstr("total ");
+        mx_printint(mx_get_total_allocated_blocks((t_list *)entries_list));
+        mx_printchar('\n');
+    }
+
+    size_t *column_sizes = mx_calculate_long_format_column_sizes((t_list *)entries_list);
+    for (const t_list *j = entries_list; j != NULL; j = j->next) {
+        t_entry entry = *(t_entry *)j->data;
+        mx_print_long_formatted_entry(entry, column_sizes);
+    }
+    free(column_sizes);
+
+    if (print_newline_in_the_end) {
+        mx_printchar('\n');
+    }
+}
+
 static void print_entries_in_columns(t_list *entries_list, size_t column_spacing, ushort terminal_width, bool print_newline_in_the_end) {
     int number_of_entries = mx_list_size(entries_list);
     ushort column_width = get_column_width(entries_list) + column_spacing;
@@ -57,25 +76,6 @@ static void print_entries_in_columns(t_list *entries_list, size_t column_spacing
         }
         mx_printchar('\n');
     }
-
-    if (print_newline_in_the_end) {
-        mx_printchar('\n');
-    }
-}
-
-static void print_long_formatted_entries(const t_list *const entries_list, const bool print_total_number_of_512_byte_blocks, const bool print_newline_in_the_end) {
-    if (print_total_number_of_512_byte_blocks) {
-        mx_printstr("total ");
-        mx_printint(mx_get_total_allocated_blocks((t_list *)entries_list));
-        mx_printchar('\n');
-    }
-
-    size_t *column_sizes = mx_calculate_long_format_column_sizes((t_list *)entries_list);
-    for (const t_list *j = entries_list; j != NULL; j = j->next) {
-        t_entry entry = *(t_entry *)j->data;
-        mx_print_long_formatted_entry(entry, column_sizes);
-    }
-    free(column_sizes);
 
     if (print_newline_in_the_end) {
         mx_printchar('\n');
