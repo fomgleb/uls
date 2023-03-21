@@ -1,4 +1,4 @@
-#include "../../../inc/entry.h"
+#include "../../../inc/uls.h"
 
 static ushort get_column_width(t_list *entries_list) {
     ushort column_width = 0;

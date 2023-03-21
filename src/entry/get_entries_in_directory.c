@@ -1,4 +1,4 @@
-#include "../../inc/entry.h"
+#include "../../inc/uls.h"
 
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {
     t_list *read_entries_list = NULL;

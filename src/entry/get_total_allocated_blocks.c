@@ -1,4 +1,4 @@
-#include "../../inc/entry.h"
+#include "../../inc/uls.h"
 
 long int mx_get_total_allocated_blocks(t_list *entries_list) {
     long int total_allocated_blocks = 0;

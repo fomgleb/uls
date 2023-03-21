@@ -1,4 +1,4 @@
-#include "../../../inc/entry.h"
+#include "../../../inc/uls.h"
 
 static void print_entry_permissions_with_indent(t_entry *entry) {
     char *permissions_str = mx_get_permissions_str(entry->stat.st_mode, entry->relative_path);

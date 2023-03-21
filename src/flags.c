@@ -1,4 +1,4 @@
-#include "../inc/flags.h"
+#include "../inc/uls.h"
 
 t_selection_flags mx_create_selection_flags(char *flags_str) {
     t_selection_flags selection_flags = {0, 0, 0, 0};

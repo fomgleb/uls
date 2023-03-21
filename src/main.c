@@ -1,4 +1,4 @@
-#include "../inc/main.h"
+#include "../inc/uls.h"
 
 static void free_main_variables(t_args args, t_list *entries_list) {
     for (t_list *node = entries_list; node != NULL; node = node->next) {

@@ -1,4 +1,4 @@
-#include "../../inc/entry.h"
+#include "../../inc/uls.h"
 
 static char mx_get_file_type_symbol(mode_t file_mode) {
     if (S_ISBLK(file_mode)) {

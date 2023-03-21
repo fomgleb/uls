@@ -1,4 +1,4 @@
-#include "../../inc/entry.h"
+#include "../../inc/uls.h"
 
 bool mx_sort_entries_by_name(void *a, void *b) {
     t_entry a_entry = *(t_entry *)a;
