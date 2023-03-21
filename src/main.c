@@ -87,66 +87,38 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags
     }
 }
 
-static void mx_print_entries_list(t_list *entries_list, t_flags flags) {
-    int entries_list_size = mx_list_size(entries_list);
-    t_list *files_list = NULL;
-    t_list *directories_list = NULL;
-
-    for (t_list *i = entries_list; i != NULL; i = i->next) {
-        t_entry entry = *(t_entry *)i->data;
-        mx_push_back(S_ISDIR(entry.stat.st_mode) ? &directories_list : &files_list, i->data);
-    }
-
-    if (flags.l) {
-        if (files_list != NULL) {
-            t_long_format_column_sizes column_sizes = mx_calculate_long_format_column_sizes(files_list);
-            for (t_list *i = files_list; i != NULL; i = i->next) {
-                t_entry file = *(t_entry *)i->data;
-                mx_print_long_formatted_entry(file, column_sizes);
-            }
-            if (entries_list_size > 1) {
-                mx_printchar('\n');
-            }
+static t_output_format get_output_format(t_flags flags) {
+    bool output_is_to_terminal = isatty(STDOUT_FILENO);
+    int flag = MAX3(flags.C, flags.one, flags.l);
+    if (output_is_to_terminal) {
+        if (flag == (int)flags.one) {
+            return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
+        } else if (flag == (int)flags.l) {
+            return LONG_OUTPUT_FORMAT;
+        } else {
+            return MULTI_COLUMN_OUTPUT_FORMAT;
         }
-
-        for (t_list *i = directories_list; i != NULL; i = i->next) {
-            t_entry directory = *(t_entry *)i->data;
-
-            if (entries_list_size > 1) {
-                mx_printstr(directory.relative_path);
-                mx_printstr(":\n");
-            }
-
-            t_long_format_column_sizes long_format_column_sizes = mx_calculate_long_format_column_sizes(directory.entries_list);
-            long int total_allocated_blocks = mx_get_total_allocated_blocks(directory.entries_list);
-            mx_printstr("total ");
-            mx_printint(total_allocated_blocks);
-            mx_printchar('\n');
-            for (t_list *j = directory.entries_list; j != NULL; j = j->next) {
-                t_entry entry = *(t_entry *)j->data;
-                mx_print_long_formatted_entry(entry, long_format_column_sizes);
-            }
-
-            if (i->next != NULL) {
-                mx_printchar('\n');
-            }
+    } else {
+        if (flag == (int)flags.C) {
+            return MULTI_COLUMN_OUTPUT_FORMAT;
+        } else if (flag == (int)flags.l) {
+            return LONG_OUTPUT_FORMAT;
+        } else {
+            return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
         }
     }
-
-    mx_clear_list(&files_list);
-    mx_clear_list(&directories_list);
 }
 
 int main(int argc, char **argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "l";
+    const char *EXISTING_FLAGS = "Cl";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     prepare_args(&args, EXISTING_FLAGS);
     t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
-    mx_print_entries_list(entries_list, flags);
+    mx_print_entries(entries_list, get_output_format(flags), flags.G ? COLORIZED_OUTPUT : 0);
 
     free_main_variables(args, entries_list);
 

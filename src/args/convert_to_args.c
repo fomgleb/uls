@@ -1,21 +1,4 @@
-#include "../inc/args.h"
-
-t_args mx_create_args(void) {
-    t_args new_args = {
-        .entry_names_list = NULL,
-        .flags_str = NULL
-    };
-    return new_args;
-}
-
-void mx_free_args(t_args args) {
-    for (t_list *node = args.entry_names_list; node != NULL; node = node->next) {
-        char *entry_name = (char *)node->data;
-        free(entry_name);
-    }
-    mx_clear_list(&args.entry_names_list);
-    free(args.flags_str);
-}
+#include "../../inc/args.h"
 
 t_args mx_convert_to_args(const int argc, const char *const*const argv) {
     t_args new_args = mx_create_args();
