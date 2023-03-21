@@ -9,7 +9,7 @@ static void free_main_variables(t_args args, t_list *entries_list) {
     mx_free_args(args);
 }
 
-static void prepare_args(t_args *args, const char *existing_args) {
+static int prepare_args(t_args *args, const char *existing_args) {
     t_args_error args_error = mx_validate_args(args, existing_args);
 
     mx_print_args_error(args_error, existing_args);
@@ -31,6 +31,8 @@ static void prepare_args(t_args *args, const char *existing_args) {
     }
 
     mx_free_args_error(args_error);
+
+    return args_error.error_code ? 1 : 0;
 }
 
 static t_list *find_entries_list(t_list *input_entry_names_list, t_flags flags) {
@@ -115,7 +117,7 @@ int main(int argc, char **argv) {
     const char *EXISTING_FLAGS = "Cl1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
-    prepare_args(&args, EXISTING_FLAGS);
+    int error_code = prepare_args(&args, EXISTING_FLAGS);
     t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
@@ -123,7 +125,7 @@ int main(int argc, char **argv) {
 
     free_main_variables(args, entries_list);
 
-    return 0;
+    return error_code;
 }
 
 // void mx_print_directory_content_recursively(t_entry directory) {
