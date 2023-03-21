@@ -82,6 +82,17 @@ static void print_entries_in_columns(t_list *entries_list, size_t column_spacing
     }
 }
 
+static void print_entries_per_line(t_list *entries_list, bool print_newline_in_the_end) {
+    for (t_list *i = entries_list; i != NULL; i = i->next) {
+        t_entry *entry = (t_entry *)i->data;
+        mx_printstr(entry->dirent ? entry->dirent->d_name : entry->relative_path);
+        mx_printchar('\n');
+    }
+    if (print_newline_in_the_end) {
+        mx_printchar('\n');
+    }
+}
+
 static void print_long_formatted_files_and_directories(t_list *files_list, t_list *directories_list, size_t all_entries_count) {
     if (files_list != NULL) {
         print_long_formatted_entries(files_list, false, directories_list != NULL);
@@ -117,6 +128,23 @@ static void print_files_and_directories_in_columns(t_list *files_list, t_list *d
     }
 }
 
+static void print_files_and_directories_per_line(t_list *files_list, t_list *directories_list, size_t all_entries_count) {
+    if (files_list != NULL) {
+        print_entries_per_line(files_list, directories_list != NULL);
+    }
+
+    for (t_list *i = directories_list; i != NULL; i = i->next) {
+        t_entry *directory = (t_entry *)i->data;
+
+        if (all_entries_count > 1) {
+            mx_printstr(directory->relative_path);
+            mx_printstr(":\n");
+        }
+
+        print_entries_per_line(directory->entries_list, i->next != NULL);
+    }
+}
+
 void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags) {
     int entries_list_size = mx_list_size(entries_list);
     t_list *files_list = NULL;
@@ -134,6 +162,8 @@ void mx_print_entries(t_list *entries_list, t_output_format output_format, t_pri
 
         if (output_format == MULTI_COLUMN_OUTPUT_FORMAT) {
             print_files_and_directories_in_columns(files_list, directories_list, entries_list_size, terminal_width, print_entries_flags & COLORIZED_OUTPUT);
+        } else if (output_format == ONE_ENTRY_PER_LINE_OUTPUT_FORMAT) {
+            print_files_and_directories_per_line(files_list, directories_list, entries_list_size);
         }
     }
 
