@@ -112,16 +112,27 @@ static t_output_format get_output_format(t_flags flags) {
     }
 }
 
+static t_print_entries_flags get_printing_flags(t_flags flags) {
+    t_print_entries_flags print_entries_flags = 0;
+    if (flags.R) {
+        print_entries_flags |= RECURSIVE_OUTPUT;
+    }
+    if (flags.G) {
+        print_entries_flags |= COLORIZED_OUTPUT;
+    }
+    return print_entries_flags;
+}
+
 int main(int argc, char **argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "Cl1";
+    const char *EXISTING_FLAGS = "CRl1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     int error_code = prepare_args(&args, EXISTING_FLAGS);
     t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
-    mx_print_entries(entries_list, get_output_format(flags), flags.G ? COLORIZED_OUTPUT : 0);
+    mx_print_entries(entries_list, get_output_format(flags), get_printing_flags(flags));
 
     free_main_variables(args, entries_list);
 
@@ -131,7 +142,7 @@ int main(int argc, char **argv) {
 // void mx_print_directory_content_recursively(t_entry directory) {
 //     mx_printstr(directory.relative_path);
 //     mx_printstr(":\n");
-//     for (t_list *i = directory.entries_list; i != NULL; i = i->next) {
+//     for (t_list *i = directory.entries_list; i != NULL; i = i->next)` {
 //         t_entry entry = *(t_entry *)i->data;
 //         mx_printint(entry.stat.st_blksize);
 //         mx_printchar(' ');

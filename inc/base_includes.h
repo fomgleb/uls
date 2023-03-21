@@ -16,3 +16,4 @@
 #include <grp.h>
 #include <time.h>
 #include <sys/ioctl.h>
+#include <stdbool.h>

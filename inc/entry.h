@@ -11,6 +11,12 @@ typedef struct s_entry {
     t_list *entries_list;
 } t_entry;
 
+typedef struct s_files_dirs {
+    t_list *files_list;
+    t_list *dirs_list;
+    size_t total_entries_count;
+} t_files_dirs;
+
 typedef enum e_output_format {
     ONE_ENTRY_PER_LINE_OUTPUT_FORMAT,
     MULTI_COLUMN_OUTPUT_FORMAT,
@@ -19,6 +25,7 @@ typedef enum e_output_format {
 
 typedef enum e_print_entries_flags {
     COLORIZED_OUTPUT = 2,
+    RECURSIVE_OUTPUT = 4
 } t_print_entries_flags;
 
 t_entry mx_create_entry(char *relative_path);
@@ -42,3 +49,5 @@ bool mx_sort_entries_by_last_modification(void *a, void *b);
 bool mx_sort_entries_by_last_access(void *a, void *b);
 bool mx_sort_entries_by_creation_time(void *a, void *b);
 bool mx_reverse_entries(void *a, void *b);
+
+t_files_dirs mx_separate_entries(t_list *entries_list);

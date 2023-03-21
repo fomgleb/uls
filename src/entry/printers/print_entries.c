@@ -35,6 +35,10 @@ static float round_up(float number) {
 }
 
 static void print_long_formatted_entries(const t_list *const entries_list, const bool print_total_number_of_512_byte_blocks, const bool print_newline_in_the_end) {
+    if (entries_list == NULL) {
+        return;
+    }
+
     if (print_total_number_of_512_byte_blocks) {
         mx_printstr("total ");
         mx_printint(mx_get_total_allocated_blocks((t_list *)entries_list));
@@ -54,6 +58,10 @@ static void print_long_formatted_entries(const t_list *const entries_list, const
 }
 
 static void print_entries_in_columns(t_list *entries_list, size_t column_spacing, ushort terminal_width, bool print_newline_in_the_end) {
+    if (entries_list == NULL) {
+        return;
+    }
+
     int number_of_entries = mx_list_size(entries_list);
     ushort column_width = get_column_width(entries_list) + column_spacing;
 
@@ -83,6 +91,9 @@ static void print_entries_in_columns(t_list *entries_list, size_t column_spacing
 }
 
 static void print_entries_per_line(t_list *entries_list, bool print_newline_in_the_end) {
+    if (entries_list == NULL) {
+        return;
+    }
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         t_entry *entry = (t_entry *)i->data;
         mx_printstr(entry->dirent ? entry->dirent->d_name : entry->relative_path);
@@ -93,33 +104,35 @@ static void print_entries_per_line(t_list *entries_list, bool print_newline_in_t
     }
 }
 
-static void print_long_formatted_files_and_directories(t_list *files_list, t_list *directories_list, size_t all_entries_count) {
-    if (files_list != NULL) {
-        print_long_formatted_entries(files_list, false, directories_list != NULL);
-    }
-
-    for (t_list *i = directories_list; i != NULL; i = i->next) {
-        t_entry directory = *(t_entry *)i->data;
-
-        if (all_entries_count > 1) {
-            mx_printstr(directory.relative_path);
-            mx_printstr(":\n");
-        }
-
-        print_long_formatted_entries(directory.entries_list, true, i->next != NULL);
+static void print_dir_name_if(bool print, t_entry *dir) {
+    if (print) {
+        mx_printstr(dir->relative_path);
+        mx_printstr(":\n");
     }
 }
 
-static void print_files_and_directories_in_columns(t_list *files_list, t_list *directories_list, size_t all_entries_count, ushort terminal_width, bool colorized) {
-    size_t column_spacing = colorized ? 1 : 8;
-    if (files_list != NULL) {
-        print_entries_in_columns(files_list, column_spacing, terminal_width, directories_list != NULL);
-    }
-
+static void print_long_formatted_entries_recursively(t_list *directories_list) {
     for (t_list *i = directories_list; i != NULL; i = i->next) {
         t_entry *directory = (t_entry *)i->data;
 
-        if (all_entries_count > 1) {
+        print_dir_name_if(true, directory);
+        print_long_formatted_entries(directory->entries_list, true, true);
+
+        t_files_dirs files_dirs = mx_separate_entries(directory->entries_list);
+        print_long_formatted_entries_recursively(files_dirs.dirs_list);
+    }
+}
+
+static void print_files_and_directories_in_columns(t_list *entries_list, ushort terminal_width, bool colorized) {
+    size_t column_spacing = colorized ? 1 : 8;
+
+    t_files_dirs files_dirs = mx_separate_entries(entries_list);
+    print_entries_in_columns(files_dirs.files_list, column_spacing, terminal_width, files_dirs.dirs_list != NULL);
+
+    for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
+        t_entry *directory = (t_entry *)i->data;
+
+        if (files_dirs.total_entries_count > 1) {
             mx_printstr(directory->relative_path);
             mx_printstr(":\n");
         }
@@ -128,15 +141,14 @@ static void print_files_and_directories_in_columns(t_list *files_list, t_list *d
     }
 }
 
-static void print_files_and_directories_per_line(t_list *files_list, t_list *directories_list, size_t all_entries_count) {
-    if (files_list != NULL) {
-        print_entries_per_line(files_list, directories_list != NULL);
-    }
+static void print_files_and_directories_per_line(t_list *entries_list) {
+    t_files_dirs files_dirs = mx_separate_entries(entries_list);
+    print_entries_per_line(files_dirs.files_list, files_dirs.dirs_list != NULL);
 
-    for (t_list *i = directories_list; i != NULL; i = i->next) {
+    for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
         t_entry *directory = (t_entry *)i->data;
 
-        if (all_entries_count > 1) {
+        if (files_dirs.total_entries_count > 1) {
             mx_printstr(directory->relative_path);
             mx_printstr(":\n");
         }
@@ -146,28 +158,26 @@ static void print_files_and_directories_per_line(t_list *files_list, t_list *dir
 }
 
 void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags) {
-    int entries_list_size = mx_list_size(entries_list);
-    t_list *files_list = NULL;
-    t_list *directories_list = NULL;
-
-    for (t_list *i = entries_list; i != NULL; i = i->next) {
-        t_entry entry = *(t_entry *)i->data;
-        mx_push_back(S_ISDIR(entry.stat.st_mode) ? &directories_list : &files_list, i->data);
-    }
-
     if (output_format == LONG_OUTPUT_FORMAT) {
-        print_long_formatted_files_and_directories(files_list, directories_list, entries_list_size);
+        t_files_dirs files_dirs = mx_separate_entries(entries_list);
+        print_long_formatted_entries(files_dirs.files_list, false, files_dirs.dirs_list != NULL);
+        if (print_entries_flags & RECURSIVE_OUTPUT) {
+            print_long_formatted_entries_recursively(files_dirs.dirs_list);
+        } else {
+            for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
+                t_entry *dir = (t_entry *)i->data;
+                print_dir_name_if(files_dirs.total_entries_count > 1, dir);
+                print_long_formatted_entries(dir->entries_list, true, i->next != NULL);
+            }
+        }
     } else {
         ushort terminal_width = get_terminal_width();
 
         if (output_format == MULTI_COLUMN_OUTPUT_FORMAT) {
-            print_files_and_directories_in_columns(files_list, directories_list, entries_list_size, terminal_width, print_entries_flags & COLORIZED_OUTPUT);
+            print_files_and_directories_in_columns(entries_list, terminal_width, print_entries_flags & COLORIZED_OUTPUT);
         } else if (output_format == ONE_ENTRY_PER_LINE_OUTPUT_FORMAT) {
-            print_files_and_directories_per_line(files_list, directories_list, entries_list_size);
+            print_files_and_directories_per_line(entries_list);
         }
     }
-
-    mx_clear_list(&files_list);
-    mx_clear_list(&directories_list);
 }
 
