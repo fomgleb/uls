@@ -47,7 +47,7 @@ static size_t *calculate_long_format_column_sizes(t_list *entries) {
     return column_sizes;
 }
 
-static void print_long_formatted_entries(const t_list *const entries_list, const bool print_total_number_of_512_byte_blocks, const bool print_newline_in_the_end) {
+static void print_long_formatted_entries(t_list *entries_list, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end) {
     if (entries_list == NULL) {
         return;
     }
@@ -70,15 +70,22 @@ static void print_long_formatted_entries(const t_list *const entries_list, const
     }
 }
 
+static void print_long_formatted_entries_in_directory_recursively(t_entry *directory, bool print_dir_name, bool print_newline_in_the_beginning) {
+    mx_printchar_if(print_newline_in_the_beginning, '\n');
+    mx_print_two_strings_if(print_dir_name, directory->relative_path, ":\n");
+    print_long_formatted_entries(directory->entries_list, true, false);
+
+    t_files_dirs files_dirs = mx_separate_entries(directory->entries_list);
+    for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
+        print_long_formatted_entries_in_directory_recursively((t_entry *)i->data, true, true);
+    }
+}
+
 static void print_long_formatted_entries_recursively(t_list *directories_list) {
     for (t_list *i = directories_list; i != NULL; i = i->next) {
         t_entry *directory = (t_entry *)i->data;
-
-        mx_print_two_strings_if(true, directory->relative_path, ":\n");
-        print_long_formatted_entries(directory->entries_list, true, true);
-
-        t_files_dirs files_dirs = mx_separate_entries(directory->entries_list);
-        print_long_formatted_entries_recursively(files_dirs.dirs_list);
+        print_long_formatted_entries_in_directory_recursively(directory, directories_list->next != NULL, false);
+        mx_printchar_if(i->next != NULL, '\n');
     }
 }
 

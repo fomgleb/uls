@@ -58,5 +58,6 @@ float mx_round_down(float number);
 float mx_round_up(float number);
 
 void mx_print_two_strings_if(bool condition, char *string1, char *string2);
+void mx_printchar_if(bool condition, char character);
 
 ushort mx_get_terminal_width();
