@@ -39,7 +39,7 @@ t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stat
 t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
 
 void mx_print_files_and_directories_in_columns(t_list *entries_list, bool colorized);
-void mx_print_files_and_directories_per_line(t_list *entries_list);
+void mx_print_files_and_directories_per_line(t_list *entries_list, bool recursively);
 void mx_print_long_formatted_files_and_directories(t_list *entries_list, bool recursive);
 
 void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes);
