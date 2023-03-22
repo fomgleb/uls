@@ -59,7 +59,10 @@ static void print_directory_content_recursively(t_entry *directory, c_char colum
 
     t_files_dirs files_dirs = mx_separate_entries(directory->entries_list);
     for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
-        print_directory_content_recursively((t_entry *)i->data, column_delimiter, terminal_width, true, true);
+        t_entry *i_directory = (t_entry *)i->data;
+        if (mx_strcmp(i_directory->dirent->d_name, ".") != 0 && mx_strcmp(i_directory->dirent->d_name, "..") != 0) {
+            print_directory_content_recursively((t_entry *)i->data, column_delimiter, terminal_width, true, true);
+        }
     }
 }
 
