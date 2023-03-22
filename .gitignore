@@ -4,4 +4,5 @@ libmx/obj
 *.a
 *.bin
 uls
+!uls/
 settings.json
