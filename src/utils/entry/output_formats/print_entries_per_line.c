@@ -6,12 +6,9 @@ static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     }
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         t_entry *entry = (t_entry *)i->data;
-        mx_printstr(entry->dirent ? entry->dirent->d_name : entry->relative_path);
-        mx_printchar('\n');
+        mx_print_two_strings(entry->dirent ? entry->dirent->d_name : entry->relative_path, "\n");
     }
-    if (print_newline_in_the_end) {
-        mx_printchar('\n');
-    }
+    mx_printchar_if(print_newline_in_the_end, '\n');
 }
 
 static void print_contents_of_directories(t_list *directories_list, bool print_names_of_dirs) {
