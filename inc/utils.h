@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../libmx/inc/libmx.h"
+#include <stddef.h>
 #include <sys/ttycom.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
@@ -20,6 +21,8 @@ typedef char *str;
 typedef const bool c_bool;
 typedef const char c_char;
 typedef const float c_float;
+typedef const ushort c_ushort;
+typedef const size_t c_size_t;
 typedef const char *const c_str;
 
 typedef struct s_entry {
@@ -44,7 +47,7 @@ void mx_free_entry_ptr(t_entry **entry);
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
 t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
 
-void mx_print_files_and_directories_in_columns(t_list *entries_list, bool colorized);
+void mx_print_files_and_directories_in_columns(t_list *entries_list, c_bool colorized, c_bool recursively);
 void mx_print_files_and_directories_per_line(t_list *entries_list, bool recursively);
 void mx_print_long_formatted_files_and_directories(t_list *entries_list, bool recursive);
 
@@ -66,5 +69,6 @@ float mx_round_up(c_float number);
 void mx_print_two_strings_if(c_bool condition, c_str string1, c_str string2);
 void mx_print_two_strings(c_str string1, c_str string2);
 void mx_printchar_if(c_bool condition, c_char character);
+void mx_printnchar_if(c_bool condition, c_char character, c_size_t count);
 
 ushort mx_get_terminal_width(void);
