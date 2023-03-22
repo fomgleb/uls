@@ -1,6 +1,6 @@
 #include "../../../inc/utils.h"
 
-float mx_round_up(float number) {
+float mx_round_up(c_float number) {
     float converted_number = (float)((long long)number);
     if (converted_number == number || number < 0) {
         return converted_number;

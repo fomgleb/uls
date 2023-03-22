@@ -1,6 +1,6 @@
 #include "../../../inc/utils.h"
 
-static t_files_dirs create_files_dirs() {
+static t_files_dirs create_files_dirs(void) {
     t_files_dirs files_dirs = {
         .files_list = NULL,
         .dirs_list = NULL,

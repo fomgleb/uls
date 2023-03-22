@@ -17,8 +17,9 @@
 #define SECONDS_IN_HALF_YEAR 15768000
 
 typedef char *str;
-
 typedef const bool c_bool;
+typedef const char c_char;
+typedef const float c_float;
 typedef const char *const c_str;
 
 typedef struct s_entry {
@@ -59,11 +60,11 @@ bool mx_reverse_entries(void *a, void *b);
 void free_files_dirs(t_files_dirs *files_dirs);
 t_files_dirs mx_separate_entries(t_list *entries_list);
 
-float mx_round_down(float number);
-float mx_round_up(float number);
+float mx_round_down(c_float number);
+float mx_round_up(c_float number);
 
 void mx_print_two_strings_if(c_bool condition, c_str string1, c_str string2);
 void mx_print_two_strings(c_str string1, c_str string2);
-void mx_printchar_if(bool condition, char character);
+void mx_printchar_if(c_bool condition, c_char character);
 
-ushort mx_get_terminal_width();
+ushort mx_get_terminal_width(void);
