@@ -16,10 +16,10 @@
 
 #define SECONDS_IN_HALF_YEAR 15768000
 
-#define str char *
+typedef char *str;
 
-#define c_bool const bool
-#define c_str const str const
+typedef const bool c_bool;
+typedef const char *const c_str;
 
 typedef struct s_entry {
     char *relative_path;
