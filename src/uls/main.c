@@ -139,24 +139,3 @@ int main(int argc, char **argv) {
     return error_code;
 }
 
-// void mx_print_directory_content_recursively(t_entry directory) {
-//     mx_printstr(directory.relative_path);
-//     mx_printstr(":\n");
-//     for (t_list *i = directory.entries_list; i != NULL; i = i->next)` {
-//         t_entry entry = *(t_entry *)i->data;
-//         mx_printint(entry.stat.st_blksize);
-//         mx_printchar(' ');
-//         mx_printint(entry.stat.st_blocks);
-//         mx_printchar(' ');
-//         mx_printstr(entry.dirent->d_name);
-//         mx_printchar('\n');
-//     }
-//     mx_printchar('\n');
-//     for (t_list *i = directory.entries_list; i != NULL; i = i->next) {
-//         t_entry entry = *(t_entry *)i->data;
-//         if (S_ISDIR(entry.stat.st_mode) && mx_strcmp(entry.dirent->d_name, ".") != 0 && mx_strcmp(entry.dirent->d_name, "..") != 0) {
-//             mx_print_directory_content_recursively(entry);
-//         }
-//     }
-// }
-
