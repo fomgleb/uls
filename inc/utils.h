@@ -23,7 +23,9 @@ typedef const char c_char;
 typedef const float c_float;
 typedef const ushort c_ushort;
 typedef const size_t c_size_t;
+typedef const int c_int;
 typedef const char *const c_str;
+typedef const char *const *const c_str_arr;
 
 typedef struct s_entry {
     char *relative_path;
