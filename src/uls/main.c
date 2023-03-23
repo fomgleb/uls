@@ -123,7 +123,7 @@ static t_print_entries_flags get_printing_flags(t_flags flags) {
     return print_entries_flags;
 }
 
-int main(int argc, char **argv) {
+int main(c_int argc, c_str_arr argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
     const char *EXISTING_FLAGS = "ACRUaclu1";
 
