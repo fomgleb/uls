@@ -96,22 +96,35 @@ static void print_number_of_entry_bytes(t_entry *entry, size_t column_size) {
     mx_printchar(' ');
 }
 
-static void print_month_with_indent(char *human_readable_time) {
+c_str get_human_readable_time(t_entry *entry, const t_time_type time_type) {
+    switch (time_type) {
+        case TIME_OF_LAST_DATA_MODIFICATION:
+            return ctime(&entry->stat.st_mtime);
+        case TIME_OF_LAST_ACCESS:
+            return ctime(&entry->stat.st_atime);
+        case TIME_OF_LAST_FILE_STATUS_CHANGE:
+            return ctime(&entry->stat.st_ctime);
+        case TIME_OF_FILE_CREATION:
+            return ctime(&entry->stat.st_birthtime);
+    }
+}
+
+static void print_month_with_indent(c_str human_readable_time) {
     mx_printnstr(human_readable_time + 4, 3);
     mx_printchar(' ');
 }
 
-static void print_month_day_with_indent(char *human_readable_time) {
+static void print_month_day_with_indent(c_str human_readable_time) {
     mx_printnstr(human_readable_time + 8, 2);
     mx_printchar(' ');
 }
 
-static void print_hours_and_minutes_with_indent(char *human_readable_time) {
+static void print_hours_and_minutes_with_indent(c_str human_readable_time) {
     mx_printnstr(human_readable_time + 11, 5);
     mx_printchar(' ');
 }
 
-static void print_year_with_indent(char *human_readable_time) {
+static void print_year_with_indent(c_str human_readable_time) {
     mx_printnstr(human_readable_time + 19, 5);
     mx_printchar(' ');
 }
@@ -130,13 +143,13 @@ static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     }
 }
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes) {
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type) {
     print_entry_permissions_with_indent(&entry);
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
     print_owner_name_with_indent(&entry, column_sizes[1]);
     print_group_name_with_indent(&entry, column_sizes[2]);
     print_number_of_entry_bytes(&entry, column_sizes[3]);
-    char *human_readable_time = ctime(&entry.stat.st_mtime);
+    c_str human_readable_time = get_human_readable_time(&entry, time_type);
     print_month_with_indent(human_readable_time);
     print_month_day_with_indent(human_readable_time);
     if (calculate_difference_between_times(entry.stat.st_mtime, time(NULL)) > SECONDS_IN_HALF_YEAR) {

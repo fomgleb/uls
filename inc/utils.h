@@ -38,6 +38,14 @@ typedef struct s_files_dirs {
     size_t total_entries_count;
 } t_files_dirs;
 
+typedef enum e_time_type {
+    TIME_OF_LAST_DATA_MODIFICATION,
+    TIME_OF_LAST_ACCESS,
+    TIME_OF_LAST_FILE_STATUS_CHANGE,
+    TIME_OF_FILE_CREATION
+} t_time_type;
+typedef const t_time_type c_time_type;
+
 t_entry mx_create_entry(char *relative_path);
 t_entry *mx_create_entry_ptr(char *relative_path);
 
@@ -49,9 +57,9 @@ t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_
 
 void mx_print_files_and_directories_in_columns(t_list *entries_list, c_bool colorized, c_bool recursively);
 void mx_print_files_and_directories_per_line(t_list *entries_list, bool recursively);
-void mx_print_long_formatted_files_and_directories(t_list *entries_list, bool recursive);
+void mx_print_long_formatted_files_and_directories(t_list *entries_list, c_time_type time_type, bool recursive);
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes);
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type);
 
 bool mx_sort_entries_by_name(void *a, void *b);
 bool mx_sort_entries_by_size(void *a, void *b);

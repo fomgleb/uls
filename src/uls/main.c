@@ -125,14 +125,14 @@ static t_print_entries_flags get_printing_flags(t_flags flags) {
 
 int main(int argc, char **argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "ACRal1";
+    const char *EXISTING_FLAGS = "ACRUaclu1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     int error_code = prepare_args(&args, EXISTING_FLAGS);
-    t_flags flags = mx_create_flags(args.flags_str);
+    c_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
-    mx_print_entries(entries_list, get_output_format(flags), get_printing_flags(flags));
+    mx_print_entries(entries_list, get_output_format(flags), get_printing_flags(flags), &flags);
 
     free_main_variables(args, entries_list);
 

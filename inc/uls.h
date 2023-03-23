@@ -94,6 +94,8 @@ typedef struct s_flags {
     unsigned int o;
     unsigned int p;
 } t_flags;
+typedef const t_flags c_flags;
+typedef const t_flags *const c_flags_ptr;
 
 #define NON_EXISTENT_ENTRY_MESSAGE "No such file or directory"
 #define PROGRAM_NAME "uls"
@@ -113,4 +115,4 @@ t_sorting_flags mx_create_sorting_flags(char *flags_str);
 t_printing_flags mx_create_printing_flags(char *flags_str);
 t_flags mx_create_flags(char *flags_str);
 
-void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags);
+void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags, c_flags_ptr flags_ptr);
