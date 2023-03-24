@@ -74,7 +74,6 @@ static void print_directory_content_recursively(t_entry *directory, bool print_d
 static void set_global_variables(t_flags *flags) {
     Flags = flags;
     OutputFormat = get_output_format(flags);
-    TimeType = get_time_type(flags);
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
         break;
@@ -83,7 +82,8 @@ static void set_global_variables(t_flags *flags) {
             ColumnDelimiter = flags->G ? ' ' : '\t';
         break;
         case LONG_OUTPUT_FORMAT:
-            break;
+            TimeType = get_time_type(flags);
+        break;
     }
 }
 
