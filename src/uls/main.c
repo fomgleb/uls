@@ -89,53 +89,19 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags flags
     }
 }
 
-static t_output_format get_output_format(t_flags flags) {
-    bool output_is_to_terminal = isatty(STDOUT_FILENO);
-    int priority_flag = MAX3(flags.C, flags.one, flags.l);
-    priority_flag = priority_flag == 0 ? -1 : priority_flag;
-    if (output_is_to_terminal) {
-        if (priority_flag == (int)flags.one) {
-            return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
-        } else if (priority_flag == (int)flags.l) {
-            return LONG_OUTPUT_FORMAT;
-        } else {
-            return MULTI_COLUMN_OUTPUT_FORMAT;
-        }
-    } else {
-        if (priority_flag == (int)flags.C) {
-            return MULTI_COLUMN_OUTPUT_FORMAT;
-        } else if (priority_flag == (int)flags.l) {
-            return LONG_OUTPUT_FORMAT;
-        } else {
-            return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
-        }
-    }
-}
-
-static t_print_entries_flags get_printing_flags(t_flags flags) {
-    t_print_entries_flags print_entries_flags = 0;
-    if (flags.R) {
-        print_entries_flags |= RECURSIVE_OUTPUT;
-    }
-    if (flags.G) {
-        print_entries_flags |= COLORIZED_OUTPUT;
-    }
-    return print_entries_flags;
-}
-
 int main(c_int argc, c_str_arr argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
     const char *EXISTING_FLAGS = "ACRUaclu1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     int error_code = prepare_args(&args, EXISTING_FLAGS);
-    c_flags flags = mx_create_flags(args.flags_str);
+    t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, flags);
     mx_sort_entries_list_recursively(entries_list, flags);
-    mx_print_entries(entries_list, get_output_format(flags), get_printing_flags(flags), &flags);
+    // mx_print_entries(entries_list, get_output_format(flags), get_printing_flags(flags), &flags);
+    mx_print_files_and_directories(entries_list, &flags);
 
     free_main_variables(args, entries_list);
 
     return error_code;
 }
-

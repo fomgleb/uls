@@ -74,4 +74,4 @@ t_args_error mx_validate_args(const t_args *const restrict args, const char *con
 
 t_flags mx_create_flags(char *flags_str);
 
-void mx_print_entries(t_list *entries_list, t_output_format output_format, t_print_entries_flags print_entries_flags, c_flags_ptr flags_ptr);
+void mx_print_files_and_directories(t_list *entries_list, t_flags *flags);

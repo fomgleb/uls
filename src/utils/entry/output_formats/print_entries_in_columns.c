@@ -12,7 +12,7 @@ static ushort get_column_width(t_list *entries_list) {
     return column_width;
 }
 
-static void print_entries(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end) {
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end) {
     if (entries_list == NULL) {
         return;
     }
@@ -43,46 +43,3 @@ static void print_entries(t_list *entries_list, c_char column_delimiter, ushort 
 
     mx_printchar_if(print_newline_in_the_end, '\n');
 }
-
-static void print_contents_of_directories(t_list *directories_list, c_char column_delimiter, c_ushort terminal_width, c_bool print_names_of_dirs) {
-    for (t_list *i = directories_list; i != NULL; i = i->next) {
-        t_entry *directory = (t_entry *)i->data;
-        mx_print_two_strings_if(print_names_of_dirs, directory->relative_path, ":\n");
-        print_entries(directory->entries_list, column_delimiter, terminal_width, i->next != NULL);
-    }
-}
-
-static void print_directory_content_recursively(t_entry *directory, c_char column_delimiter, c_ushort terminal_width, bool print_dir_name, bool print_newline_in_the_beginning) {
-    mx_printchar_if(print_newline_in_the_beginning, '\n');
-    mx_print_two_strings_if(print_dir_name, directory->relative_path, ":\n");
-    print_entries(directory->entries_list, column_delimiter, terminal_width, false);
-
-    t_files_dirs files_dirs = mx_separate_entries(directory->entries_list);
-    for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
-        t_entry *i_directory = (t_entry *)i->data;
-        if (mx_strcmp(i_directory->dirent->d_name, ".") != 0 && mx_strcmp(i_directory->dirent->d_name, "..") != 0) {
-            print_directory_content_recursively((t_entry *)i->data, column_delimiter, terminal_width, true, true);
-        }
-    }
-}
-
-static void print_contents_of_directories_recursively(t_list *directories_list, c_char column_delimiter, c_ushort terminal_width, bool print_dir_name) {
-    for (t_list *i = directories_list; i != NULL; i = i->next) {
-        t_entry *directory = (t_entry *)i->data;
-        print_directory_content_recursively(directory, column_delimiter, terminal_width, print_dir_name, false);
-        mx_printchar_if(i->next != NULL, '\n');
-    }
-}
-
-void mx_print_files_and_directories_in_columns(t_list *entries_list, c_bool colorized, c_bool recursively) {
-    c_char column_delimiter = colorized ? ' ' : '\t';
-    ushort terminal_width = mx_get_terminal_width();
-    t_files_dirs files_dirs = mx_separate_entries(entries_list);
-    print_entries(files_dirs.files_list, column_delimiter, terminal_width, files_dirs.dirs_list != NULL);
-    if (recursively) {
-        print_contents_of_directories_recursively(files_dirs.dirs_list, column_delimiter, terminal_width, files_dirs.total_entries_count > 1);
-    } else {
-        print_contents_of_directories(files_dirs.dirs_list, column_delimiter, terminal_width, files_dirs.total_entries_count > 1);
-    }
-}
-

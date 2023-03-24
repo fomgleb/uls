@@ -57,9 +57,9 @@ void mx_free_entry_ptr(t_entry **entry);
 t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
 t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
 
-void mx_print_files_and_directories_in_columns(t_list *entries_list, c_bool colorized, c_bool recursively);
-void mx_print_files_and_directories_per_line(t_list *entries_list, bool recursively);
-void mx_print_long_formatted_files_and_directories(t_list *entries_list, c_time_type time_type, bool recursive);
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end);
+void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end);
+void mx_print_entries_per_line(t_list *entries_list, bool print_newline_in_the_end);
 
 void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type);
 
