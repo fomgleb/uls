@@ -90,7 +90,7 @@ static void print_group_name_with_indent(t_entry *entry, size_t column_size) {
     mx_printnchar(' ', 2);
 }
 
-static void print_number_of_entry_bytes(t_entry *entry, size_t column_size) {
+static void print_number_of_entry_bytes_with_indent(t_entry *entry, size_t column_size) {
     mx_printnchar(' ', column_size - mx_get_digits_count(entry->stat.st_size));
     mx_printint(entry->stat.st_size);
     mx_printchar(' ');
@@ -148,7 +148,7 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
     print_owner_name_with_indent(&entry, column_sizes[1]);
     print_group_name_with_indent(&entry, column_sizes[2]);
-    print_number_of_entry_bytes(&entry, column_sizes[3]);
+    print_number_of_entry_bytes_with_indent(&entry, column_sizes[3]);
     time_t file_time = get_time(&entry, time_type);
     c_str human_readable_time = ctime(&file_time);
     print_month_with_indent(human_readable_time);
