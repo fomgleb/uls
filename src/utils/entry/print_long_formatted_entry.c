@@ -96,16 +96,16 @@ static void print_number_of_entry_bytes(t_entry *entry, size_t column_size) {
     mx_printchar(' ');
 }
 
-c_str get_human_readable_time(t_entry *entry, const t_time_type time_type) {
+time_t get_time(t_entry *entry, t_time_type time_type) {
     switch (time_type) {
         case TIME_OF_LAST_DATA_MODIFICATION:
-            return ctime(&entry->stat.st_mtime);
+            return entry->stat.st_mtime;
         case TIME_OF_LAST_ACCESS:
-            return ctime(&entry->stat.st_atime);
+            return entry->stat.st_atime;
         case TIME_OF_LAST_FILE_STATUS_CHANGE:
-            return ctime(&entry->stat.st_ctime);
+            return entry->stat.st_ctime;
         case TIME_OF_FILE_CREATION:
-            return ctime(&entry->stat.st_birthtime);
+            return entry->stat.st_birthtime;
     }
 }
 
@@ -149,10 +149,11 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_
     print_owner_name_with_indent(&entry, column_sizes[1]);
     print_group_name_with_indent(&entry, column_sizes[2]);
     print_number_of_entry_bytes(&entry, column_sizes[3]);
-    c_str human_readable_time = get_human_readable_time(&entry, time_type);
+    time_t file_time = get_time(&entry, time_type);
+    c_str human_readable_time = ctime(&file_time);
     print_month_with_indent(human_readable_time);
     print_month_day_with_indent(human_readable_time);
-    if (calculate_difference_between_times(entry.stat.st_mtime, time(NULL)) > SECONDS_IN_HALF_YEAR) {
+    if (calculate_difference_between_times(file_time, time(NULL)) > SECONDS_IN_HALF_YEAR) {
         print_year_with_indent(human_readable_time);
     } else {
         print_hours_and_minutes_with_indent(human_readable_time);
@@ -164,4 +165,3 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_
     }
     mx_printchar('\n');
 }
-
