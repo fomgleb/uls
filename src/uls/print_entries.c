@@ -45,13 +45,13 @@ static t_output_format get_output_format(t_flags *flags) {
 static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
-            mx_print_entries_per_line(entries_list, Flags->G, print_newline_in_the_end);
+            mx_print_entries_per_line(entries_list, Flags->G && isatty(STDOUT_FILENO), print_newline_in_the_end);
         break;
         case MULTI_COLUMN_OUTPUT_FORMAT:
-            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G);
+            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO));
         break;
         case LONG_OUTPUT_FORMAT:
-            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, Flags->G);
+            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO));
         break;
     }
 }
@@ -79,7 +79,7 @@ static void set_global_variables(t_flags *flags) {
         break;
         case MULTI_COLUMN_OUTPUT_FORMAT:
             TerminalWidth = mx_get_terminal_width();
-            ColumnDelimiter = flags->G ? ' ' : '\t';
+            ColumnDelimiter = flags->G && isatty(STDOUT_FILENO) ? ' ' : '\t';
         break;
         case LONG_OUTPUT_FORMAT:
             TimeType = get_time_type(flags);
