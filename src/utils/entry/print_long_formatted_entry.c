@@ -143,7 +143,7 @@ static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     }
 }
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type) {
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type, bool colorized) {
     print_entry_permissions_with_indent(&entry);
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
     print_owner_name_with_indent(&entry, column_sizes[1]);
@@ -158,7 +158,7 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_
     } else {
         print_hours_and_minutes_with_indent(human_readable_time);
     }
-    mx_printstr(entry.dirent != NULL ? entry.dirent->d_name : entry.relative_path);
+    mx_print_entry_name(&entry, colorized);
     if (S_ISLNK(entry.stat.st_mode)) {
         mx_printstr(" -> ");
         print_link_content(entry);

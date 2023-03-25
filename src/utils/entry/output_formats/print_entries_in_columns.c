@@ -12,7 +12,7 @@ static ushort get_column_width(t_list *entries_list) {
     return column_width;
 }
 
-void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end) {
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, bool colorized) {
     if (entries_list == NULL) {
         return;
     }
@@ -30,8 +30,7 @@ void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, 
             ushort converted_index = x * number_of_rows + y;
             if (converted_index < number_of_entries) {
                 t_entry *entry = (t_entry *)mx_get_by_index(entries_list, converted_index)->data;
-                char *printing_string = entry->dirent ? entry->dirent->d_name : entry->relative_path;
-                size_t printing_string_length = mx_printstr(printing_string);
+                size_t printing_string_length = mx_print_entry_name(entry, colorized);
                 if (x + 1 != number_of_columns) {
                     mx_printnchar(' ', column_width - printing_string_length);
                     mx_printchar(column_delimiter);

@@ -45,13 +45,13 @@ static t_output_format get_output_format(t_flags *flags) {
 static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
-            mx_print_entries_per_line(entries_list, print_newline_in_the_end);
+            mx_print_entries_per_line(entries_list, Flags->G, print_newline_in_the_end);
         break;
         case MULTI_COLUMN_OUTPUT_FORMAT:
-            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end);
+            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G);
         break;
         case LONG_OUTPUT_FORMAT:
-            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end);
+            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, Flags->G);
         break;
     }
 }
