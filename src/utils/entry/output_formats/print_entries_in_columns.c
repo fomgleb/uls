@@ -1,6 +1,6 @@
 #include "../../../../inc/utils.h"
 
-static ushort get_column_width(t_list *entries_list) {
+static ushort get_max_element_size(t_list *entries_list) {
     ushort column_width = 0;
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         t_entry *entry = (t_entry *)i->data;
@@ -18,7 +18,9 @@ void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, 
     }
 
     int number_of_entries = mx_list_size(entries_list);
-    ushort column_width = get_column_width(entries_list);
+    ushort column_width = get_max_element_size(entries_list);
+    size_t tab_size_after_entry = mx_round_down(column_width / 8.0f + 1) * 8 - column_width;
+    column_width += column_delimiter == '\t' ? tab_size_after_entry : 1;
 
     ushort number_of_rows = mx_round_up(number_of_entries / mx_round_down((float)terminal_width / column_width));
     float average_number_of_entries_per_row = (float)number_of_entries / number_of_rows;
@@ -32,7 +34,11 @@ void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, 
                 t_entry *entry = (t_entry *)mx_get_by_index(entries_list, converted_index)->data;
                 size_t printing_string_length = mx_print_entry_name(entry, colorized);
                 if (x + 1 != number_of_columns) {
-                    mx_printnchar(' ', column_width - printing_string_length);
+                    if (column_delimiter == '\t') {
+                        mx_printnchar(' ', column_width - printing_string_length - tab_size_after_entry);
+                    } else {
+                        mx_printnchar(' ', column_width - printing_string_length - 1);
+                    }
                     mx_printchar(column_delimiter);
                 }
             }
