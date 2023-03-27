@@ -92,7 +92,6 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags *flag
 }
 
 int main(c_int argc, c_str_arr argv) {
-    // const char *EXISTING_FLAGS = "ARSUacdflrtu";
     const char *EXISTING_FLAGS = "ACGRSUacdflrtu1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
@@ -100,7 +99,6 @@ int main(c_int argc, c_str_arr argv) {
     t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, &flags);
     mx_sort_entries_list_recursively(entries_list, &flags);
-    // mx_print_entries(entries_list, get_output_format(flags), get_printing_flags(flags), &flags);
     mx_print_files_and_directories(entries_list, &flags);
 
     free_main_variables(args, entries_list);
