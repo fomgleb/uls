@@ -33,6 +33,14 @@ bool mx_sort_entries_by_last_access(void *a, void *b) {
             a_last_access_time < b_last_access_time;
 }
 
+bool mx_sort_entries_by_status_change(void *a, void *b) {
+    time_t a_last_access_time = (*(t_entry *)a).stat.st_ctime;
+    time_t b_last_access_time = (*(t_entry *)b).stat.st_ctime;
+    return  a_last_access_time == b_last_access_time ?
+            mx_sort_entries_by_name(a, b) :
+            a_last_access_time < b_last_access_time;
+}
+
 bool mx_sort_entries_by_creation_time(void *a, void *b) {
 #ifdef __APPLE__
     time_t a_creation_time = (*(t_entry *)a).stat.st_birthtimespec.tv_sec;
@@ -53,4 +61,3 @@ bool mx_reverse_entries(void *a, void *b) {
     }
     return false;
 }
-

@@ -69,6 +69,7 @@ bool mx_sort_entries_by_name(void *a, void *b);
 bool mx_sort_entries_by_size(void *a, void *b);
 bool mx_sort_entries_by_last_modification(void *a, void *b);
 bool mx_sort_entries_by_last_access(void *a, void *b);
+bool mx_sort_entries_by_status_change(void *a, void *b);
 bool mx_sort_entries_by_creation_time(void *a, void *b);
 bool mx_reverse_entries(void *a, void *b);
 
