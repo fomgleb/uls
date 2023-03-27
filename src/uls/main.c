@@ -73,6 +73,8 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags *flag
             mx_sort_list(entries_list, mx_sort_entries_by_last_access);
         } else if (flags->U > flags->u && flags->U > flags->c) {
             mx_sort_list(entries_list, mx_sort_entries_by_creation_time);
+        } else if (flags->c) {
+            mx_sort_list(entries_list, mx_sort_entries_by_last_access);
         } else {
             mx_sort_list(entries_list, mx_sort_entries_by_last_modification);
         }
