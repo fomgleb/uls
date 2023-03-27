@@ -48,14 +48,14 @@ static t_list *find_entries_list(t_list *input_entry_names_list, t_flags *flags)
         for (t_list *i = entries_list; i != NULL; i = i->next) {
             t_entry *entry = (t_entry *)i->data;
             if (S_ISDIR(entry->stat.st_mode)) {
-                entry->entries_list = mx_get_entries_in_directory_recursively(*entry, flags->a || flags->A, !flags->a && flags->A);
+                entry->entries_list = mx_get_entries_in_directory_recursively(*entry, flags->a || flags->A || flags->f, !flags->a && flags->A && !flags->f);
             }
         }
     } else {
         for (t_list *node = entries_list; node != NULL; node = node->next) {
             t_entry *entry = (t_entry *)node->data;
             if (S_ISDIR(entry->stat.st_mode)) {
-                entry->entries_list = mx_get_entries_in_directory(*entry, flags->a || flags->A, !flags->a && flags->A);
+                entry->entries_list = mx_get_entries_in_directory(*entry, flags->a || flags->A || flags->f, !flags->a && flags->A && !flags->f);
             }
         }
     }
@@ -93,7 +93,7 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags *flag
 
 int main(c_int argc, c_str_arr argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "ACGRSUacdlrtu1";
+    const char *EXISTING_FLAGS = "ACGRSUacdflrtu1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     int error_code = prepare_args(&args, EXISTING_FLAGS);
