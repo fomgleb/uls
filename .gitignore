@@ -6,3 +6,4 @@ libmx/obj
 uls
 !uls/
 settings.json
+.DS_Store
