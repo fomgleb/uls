@@ -89,21 +89,25 @@ static void set_global_variables(t_flags *flags) {
 
 void mx_print_files_and_directories(t_list *entries_list, t_flags *flags) {
     set_global_variables(flags);
-    t_files_dirs files_dirs = mx_separate_entries(entries_list);
-    PrintTotalNumberOf512ByteBlocks = files_dirs.dirs_list != NULL;
-    print_entries(files_dirs.files_list, files_dirs.dirs_list != NULL);
-    if (flags->R) {
-        for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
-            t_entry *directory = (t_entry *)i->data;
-            print_directory_content_recursively(directory, files_dirs.total_entries_count > 1, false);
-            mx_printchar_if(i->next != NULL, '\n');
-        }
+    if (flags->d) {
+        print_entries(entries_list, false);
     } else {
-        for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
-            t_entry *directory = (t_entry *)i->data;
-            mx_print_two_strings_if(files_dirs.total_entries_count > 1, directory->relative_path, ":\n");
-            PrintTotalNumberOf512ByteBlocks = true;
-            print_entries(directory->entries_list, i->next != NULL);
+        t_files_dirs files_dirs = mx_separate_entries(entries_list);
+        PrintTotalNumberOf512ByteBlocks = files_dirs.dirs_list != NULL;
+        print_entries(files_dirs.files_list, files_dirs.dirs_list != NULL);
+        if (flags->R) {
+            for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
+                t_entry *directory = (t_entry *)i->data;
+                print_directory_content_recursively(directory, files_dirs.total_entries_count > 1, false);
+                mx_printchar_if(i->next != NULL, '\n');
+            }
+        } else {
+            for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
+                t_entry *directory = (t_entry *)i->data;
+                mx_print_two_strings_if(files_dirs.total_entries_count > 1, directory->relative_path, ":\n");
+                PrintTotalNumberOf512ByteBlocks = true;
+                print_entries(directory->entries_list, i->next != NULL);
+            }
         }
     }
 }

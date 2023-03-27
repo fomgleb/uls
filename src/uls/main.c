@@ -93,7 +93,7 @@ static void mx_sort_entries_list_recursively(t_list *entries_list, t_flags *flag
 
 int main(c_int argc, c_str_arr argv) {
     // const char *EXISTING_FLAGS = "ARSUacdflrtu";
-    const char *EXISTING_FLAGS = "ACGRSUaclrtu1";
+    const char *EXISTING_FLAGS = "ACGRSUacdlrtu1";
 
     t_args args = mx_convert_to_args(argc, (const char **)argv);
     int error_code = prepare_args(&args, EXISTING_FLAGS);
