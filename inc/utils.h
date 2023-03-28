@@ -50,7 +50,8 @@ typedef const t_time_type c_time_type;
 
 typedef enum e_long_format_flags {
     IS_COLORIZED = 2,
-    DISPLAY_EXTENDED_ATTRIBUTES = 4
+    DISPLAY_EXTENDED_ATTRIBUTES = 4,
+    FULL_TIME_INFO = 8
 } t_long_format_flags;
 typedef const t_long_format_flags c_long_format_flags;
 

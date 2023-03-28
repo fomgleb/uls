@@ -129,6 +129,11 @@ static void print_year_with_indent(c_str human_readable_time) {
     mx_printchar(' ');
 }
 
+static void print_full_time(c_str human_readable_time) {
+    mx_printnstr(human_readable_time + 4, 20);
+    mx_printchar(' ');
+}
+
 static void print_link_content(t_entry entry) {
     char link_content[1024];
     ssize_t link_content_len = readlink(entry.relative_path, link_content, 1024);
@@ -167,12 +172,16 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_t
     print_number_of_entry_bytes_with_indent(&entry, column_sizes[3]);
     time_t file_time = get_time(&entry, time_type);
     c_str human_readable_time = ctime(&file_time);
-    print_month_with_indent(human_readable_time);
-    print_month_day_with_indent(human_readable_time);
-    if (calculate_difference_between_times(file_time, time(NULL)) > SECONDS_IN_HALF_YEAR) {
-        print_year_with_indent(human_readable_time);
+    if (long_format_flags & FULL_TIME_INFO) {
+        print_full_time(human_readable_time);
     } else {
-        print_hours_and_minutes_with_indent(human_readable_time);
+        print_month_with_indent(human_readable_time);
+        print_month_day_with_indent(human_readable_time);
+        if (calculate_difference_between_times(file_time, time(NULL)) > SECONDS_IN_HALF_YEAR) {
+            print_year_with_indent(human_readable_time);
+        } else {
+            print_hours_and_minutes_with_indent(human_readable_time);
+        }
     }
     mx_print_entry_name(&entry, long_format_flags & IS_COLORIZED);
     if (S_ISLNK(entry.stat.st_mode)) {

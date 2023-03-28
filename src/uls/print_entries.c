@@ -50,6 +50,9 @@ static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
     if (flags->at) {
         long_format_flags |= DISPLAY_EXTENDED_ATTRIBUTES;
     }
+    if (flags->T) {
+        long_format_flags |= FULL_TIME_INFO;
+    }
     return long_format_flags;
 }
 
