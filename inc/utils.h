@@ -48,6 +48,12 @@ typedef enum e_time_type {
 } t_time_type;
 typedef const t_time_type c_time_type;
 
+typedef enum e_long_format_flags {
+    IS_COLORIZED = 2,
+    DISPLAY_EXTENDED_ATTRIBUTES = 4
+} t_long_format_flags;
+typedef const t_long_format_flags c_long_format_flags;
+
 t_entry mx_create_entry(char *relative_path);
 t_entry *mx_create_entry_ptr(char *relative_path);
 
@@ -58,12 +64,12 @@ t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stat
 t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
 
 void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, bool colorized);
-void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, bool colorized);
+void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, c_long_format_flags long_format_flags);
 void mx_print_entries_per_line(t_list *entries_list, bool colorized, bool print_newline_in_the_end);
 
 size_t mx_print_entry_name(t_entry *entry, bool colorized);
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type, bool colorized);
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags);
 
 bool mx_sort_entries_by_name(void *a, void *b);
 bool mx_sort_entries_by_size(void *a, void *b);

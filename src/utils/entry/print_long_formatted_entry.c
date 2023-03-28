@@ -135,6 +135,22 @@ static void print_link_content(t_entry entry) {
     mx_printnstr(link_content, link_content_len);
 }
 
+static void print_extended_attributes(t_entry *entry) {
+    size_t xattr_size = 10000;
+    char attributes[xattr_size];
+    ssize_t attributes_len = listxattr(entry->relative_path, attributes, xattr_size, XATTR_NOFOLLOW);
+    for (ssize_t i = 0; i < attributes_len;) {
+        mx_printstr("\n\t");
+        size_t printed_len = mx_printstr(attributes + i);
+        char value[xattr_size];
+        ssize_t value_len = getxattr(entry->relative_path, &attributes[i], value, xattr_size, 0, XATTR_NOFOLLOW);
+        mx_printchar('\t');
+        mx_printint(value_len);
+        mx_printchar(' ');
+        i += printed_len + 1;
+    }
+}
+
 static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     if (time1 > time2) {
         return time1 - time2;
@@ -143,7 +159,7 @@ static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     }
 }
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_time_type time_type, bool colorized) {
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags) {
     print_entry_permissions_with_indent(&entry);
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
     print_owner_name_with_indent(&entry, column_sizes[1]);
@@ -158,10 +174,13 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, const t_
     } else {
         print_hours_and_minutes_with_indent(human_readable_time);
     }
-    mx_print_entry_name(&entry, colorized);
+    mx_print_entry_name(&entry, long_format_flags & IS_COLORIZED);
     if (S_ISLNK(entry.stat.st_mode)) {
         mx_printstr(" -> ");
         print_link_content(entry);
+    }
+    if (long_format_flags & DISPLAY_EXTENDED_ATTRIBUTES) {
+        print_extended_attributes(&entry);
     }
     mx_printchar('\n');
 }

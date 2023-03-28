@@ -42,6 +42,17 @@ static t_output_format get_output_format(t_flags *flags) {
     }
 }
 
+static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
+    t_long_format_flags long_format_flags = 0;
+    if (flags->G && isatty(STDOUT_FILENO)) {
+        long_format_flags |= IS_COLORIZED;
+    }
+    if (flags->at) {
+        long_format_flags |= DISPLAY_EXTENDED_ATTRIBUTES;
+    }
+    return long_format_flags;
+}
+
 static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
@@ -51,7 +62,7 @@ static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
             mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO));
         break;
         case LONG_OUTPUT_FORMAT:
-            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO));
+            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, flags_to_long_format_flags(Flags));
         break;
     }
 }
