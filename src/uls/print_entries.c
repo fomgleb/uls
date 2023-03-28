@@ -83,6 +83,7 @@ static void print_directory_content_recursively(t_entry *directory, bool print_d
             print_directory_content_recursively((t_entry *)i->data, true, true);
         }
     }
+    mx_free_files_dirs(&files_dirs);
 }
 
 static void set_global_variables(t_flags *flags) {
@@ -123,5 +124,6 @@ void mx_print_files_and_directories(t_list *entries_list, t_flags *flags) {
                 print_entries(directory->entries_list, i->next != NULL);
             }
         }
+        mx_free_files_dirs(&files_dirs);
     }
 }

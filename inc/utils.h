@@ -80,7 +80,7 @@ bool mx_sort_entries_by_status_change(void *a, void *b);
 bool mx_sort_entries_by_creation_time(void *a, void *b);
 bool mx_reverse_entries(void *a, void *b);
 
-void free_files_dirs(t_files_dirs *files_dirs);
+void mx_free_files_dirs(t_files_dirs *files_dirs);
 t_files_dirs mx_separate_entries(t_list *entries_list);
 
 float mx_round_down(c_float number);
