@@ -9,7 +9,7 @@ static void free_main_variables(t_args args, t_list *entries_list) {
     mx_free_args(args);
 }
 
-static int prepare_args(t_args *args, const char *existing_args) {
+static int prepare_args(t_args *args, c_str existing_args) {
     t_args_error args_error = mx_validate_args(args, existing_args);
 
     mx_print_args_error(args_error, existing_args);
@@ -64,9 +64,9 @@ static t_list *find_entries_list(t_list *input_entry_names_list, t_flags *flags)
 }
 
 int main(c_int argc, c_str_arr argv) {
-    const char *EXISTING_FLAGS = "ACGRSTU@acdfhlrtu1";
+    c_str EXISTING_FLAGS = "ACGRSTU@acdfhlrtu1";
 
-    t_args args = mx_convert_to_args(argc, (const char **)argv);
+    t_args args = mx_convert_to_args(argc, argv);
     int error_code = prepare_args(&args, EXISTING_FLAGS);
     t_flags flags = mx_create_flags(args.flags_str);
     t_list *entries_list = find_entries_list(args.entry_names_list, &flags);

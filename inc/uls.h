@@ -65,12 +65,12 @@ typedef const t_flags *const c_flags_ptr;
 t_args mx_create_args(void);
 void mx_free_args(t_args args);
 
-t_args mx_convert_to_args(const int argc, const char *const*const argv);
+t_args mx_convert_to_args(c_int argc, c_str_arr argv);
 void mx_print_args_error(t_args_error args_error, const char *existing_flags);
 
 t_args_error mx_create_args_error(void);
 void mx_free_args_error(t_args_error args_error);
-t_args_error mx_validate_args(const t_args *const restrict args, const char *const restrict existing_flags);
+t_args_error mx_validate_args(t_args *args, c_str existing_flags);
 
 t_flags mx_create_flags(char *flags_str);
 

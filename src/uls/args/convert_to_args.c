@@ -1,6 +1,6 @@
 #include "../../../inc/uls.h"
 
-t_args mx_convert_to_args(const int argc, const char *const*const argv) {
+t_args mx_convert_to_args(c_int argc, c_str_arr argv) {
     t_args new_args = mx_create_args();
 
     int argv_index = 1;
@@ -20,4 +20,3 @@ t_args mx_convert_to_args(const int argc, const char *const*const argv) {
 
     return new_args;
 }
-
