@@ -53,6 +53,9 @@ static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
     if (flags->T) {
         long_format_flags |= FULL_TIME_INFO;
     }
+    if (flags->h) {
+        long_format_flags |= HUMAN_READABLE_SIZE;
+    }
     return long_format_flags;
 }
 

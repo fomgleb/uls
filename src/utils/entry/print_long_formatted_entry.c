@@ -97,6 +97,37 @@ static void print_number_of_entry_bytes_with_indent(t_entry *entry, size_t colum
     mx_printchar(' ');
 }
 
+static void print_human_readable_entry_size_with_indent(off_t entry_size) {
+    uchar removed_pow_of_entry_size = 0;
+
+    mx_printchar(' ');
+
+    if (entry_size < 1000) {
+        mx_printnchar(' ', entry_size < 10 ? 2 : entry_size < 100 ? 1 : 0);
+        mx_printint(entry_size);
+    } else {
+        float converted_entry_size = entry_size;
+        for (; converted_entry_size > 1000; removed_pow_of_entry_size++) {
+            converted_entry_size /= BYTES_IN_KILOBYTE;
+        }
+
+        if (converted_entry_size >= 10) {
+            int rounded_entry_size = mx_round(converted_entry_size);
+            mx_printchar_if(rounded_entry_size < 100, ' ');
+            mx_printint(rounded_entry_size);
+        } else {
+            int number = mx_round(converted_entry_size * 10);
+            bool print_float = number % 10 != 0 || number / 10 < 10;
+            mx_printchar_if(!print_float, ' ');
+            mx_printint(number / 10);
+            mx_print_char_and_int_if(print_float, '.', number % 10);
+        }
+    }
+
+    static const char units[] = {'B', 'K', 'M', 'G', 'T', 'P'};
+    mx_print_two_chars(units[removed_pow_of_entry_size], ' ');
+}
+
 time_t get_time(t_entry *entry, t_time_type time_type) {
     switch (time_type) {
         case TIME_OF_LAST_DATA_MODIFICATION:
@@ -170,7 +201,11 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_t
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
     print_owner_name_with_indent(&entry, column_sizes[1]);
     print_group_name_with_indent(&entry, column_sizes[2]);
-    print_number_of_entry_bytes_with_indent(&entry, column_sizes[3]);
+    if (long_format_flags & HUMAN_READABLE_SIZE) {
+        print_human_readable_entry_size_with_indent(entry.stat.st_size);
+    } else {
+        print_number_of_entry_bytes_with_indent(&entry, column_sizes[3]);
+    }
     time_t file_time = get_time(&entry, time_type);
     c_str human_readable_time = ctime(&file_time);
     if (long_format_flags & FULL_TIME_INFO) {

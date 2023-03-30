@@ -16,8 +16,10 @@
 #define MAX3(a, b, c) (MAX2(MAX2(a, b), c))
 
 #define SECONDS_IN_HALF_YEAR 15768000
+#define BYTES_IN_KILOBYTE 1024
 
 typedef char *str;
+typedef unsigned char uchar;
 typedef const bool c_bool;
 typedef const char c_char;
 typedef const float c_float;
@@ -51,7 +53,8 @@ typedef const t_time_type c_time_type;
 typedef enum e_long_format_flags {
     IS_COLORIZED = 2,
     DISPLAY_EXTENDED_ATTRIBUTES = 4,
-    FULL_TIME_INFO = 8
+    FULL_TIME_INFO = 8,
+    HUMAN_READABLE_SIZE = 16
 } t_long_format_flags;
 typedef const t_long_format_flags c_long_format_flags;
 
