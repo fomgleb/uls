@@ -1,20 +1,11 @@
 #include "../../inc/uls.h"
 
-static void free_main_variables(t_args args, t_list *entries_list) {
-    for (t_list *node = entries_list; node != NULL; node = node->next) {
-        t_entry *entry = (t_entry *)node->data;
-        mx_free_entry_ptr(&entry);
-    }
-    mx_clear_list(&entries_list);
-    mx_free_args(args);
-}
-
 static int prepare_args(t_args *args, c_str existing_args) {
     t_args_error args_error = mx_validate_args(args, existing_args);
 
     mx_print_args_error(args_error, existing_args);
     if (args_error.error_code == ILLEGAL_FLAG) {
-        free_main_variables(*args, NULL);
+        mx_free_args(*args);
         exit(EXIT_FAILURE);
     }
     for (t_list *invalid = args_error.invalid_entry_names_list; invalid != NULL; invalid = invalid->next) {
@@ -73,7 +64,8 @@ int main(c_int argc, c_str_arr argv) {
     mx_sort_entries_list_recursively(entries_list, &flags);
     mx_print_files_and_directories(entries_list, &flags);
 
-    free_main_variables(args, entries_list);
+    mx_free_entries_list(entries_list);
+    mx_free_args(args);
 
     return error_code;
 }

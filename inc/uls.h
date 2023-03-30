@@ -74,6 +74,8 @@ t_args_error mx_validate_args(t_args *args, c_str existing_flags);
 
 t_flags mx_create_flags(char *flags_str);
 
+void mx_free_entries_list(t_list *entries_list);
+
 void mx_print_files_and_directories(t_list *entries_list, t_flags *flags);
 
 void mx_sort_entries_list_recursively(t_list *entries_list, t_flags *flags);
