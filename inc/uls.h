@@ -72,6 +72,8 @@ t_args_error mx_create_args_error(void);
 void mx_free_args_error(t_args_error args_error);
 t_args_error mx_validate_args(t_args *args, c_str existing_flags);
 
+t_list *mx_find_entries_list(t_list *input_entry_names_list, t_flags *flags);
+
 t_flags mx_create_flags(char *flags_str);
 
 void mx_free_entries_list(t_list *entries_list);
