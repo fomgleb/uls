@@ -219,7 +219,7 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_t
             print_hours_and_minutes_with_indent(human_readable_time);
         }
     }
-    mx_print_entry_name(&entry, long_format_flags & IS_COLORIZED);
+    mx_print_entry_name(&entry, long_format_flags & IS_COLORIZED, long_format_flags & PRINT_SLASH_AFTER_DIRECTORIES);
     if (S_ISLNK(entry.stat.st_mode)) {
         mx_printstr(" -> ");
         print_link_content(entry);

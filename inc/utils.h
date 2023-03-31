@@ -54,9 +54,15 @@ typedef enum e_long_format_flags {
     IS_COLORIZED = 2,
     DISPLAY_EXTENDED_ATTRIBUTES = 4,
     FULL_TIME_INFO = 8,
-    HUMAN_READABLE_SIZE = 16
+    HUMAN_READABLE_SIZE = 16,
+    PRINT_SLASH_AFTER_DIRECTORIES = 32
 } t_long_format_flags;
 typedef const t_long_format_flags c_long_format_flags;
+
+typedef enum e_find_entries_flags {
+    INCLUDE_ENTRIES_STARTING_WITH_DOT = 2,
+    IGNORE_CURRENT_AND_FATHER_DIRECTORY = 4
+} t_find_entries_flags;
 
 t_entry mx_create_entry(char *relative_path);
 t_entry *mx_create_entry_ptr(char *relative_path);
@@ -64,14 +70,14 @@ t_entry *mx_create_entry_ptr(char *relative_path);
 void mx_free_entry(t_entry entry);
 void mx_free_entry_ptr(t_entry **entry);
 
-t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
-t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
+t_list *mx_get_entries_in_directory(t_entry directory, t_find_entries_flags find_entries_flags);
+t_list *mx_get_entries_in_directory_recursively(t_entry directory, t_find_entries_flags find_entries_flags);
 
-void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, bool colorized);
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, bool colorized, bool slash_after_dirs);
 void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, c_long_format_flags long_format_flags);
-void mx_print_entries_per_line(t_list *entries_list, bool colorized, bool print_newline_in_the_end);
+void mx_print_entries_per_line(t_list *entries_list, bool colorized, bool print_newline_in_the_end, bool slash_after_dirs);
 
-size_t mx_print_entry_name(t_entry *entry, bool colorized);
+size_t mx_print_entry_name(t_entry *entry, bool colorized, bool slash_after_dirs);
 
 void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags);
 

@@ -44,28 +44,21 @@ static t_output_format get_output_format(t_flags *flags) {
 
 static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
     t_long_format_flags long_format_flags = 0;
-    if (flags->G && isatty(STDOUT_FILENO)) {
-        long_format_flags |= IS_COLORIZED;
-    }
-    if (flags->at) {
-        long_format_flags |= DISPLAY_EXTENDED_ATTRIBUTES;
-    }
-    if (flags->T) {
-        long_format_flags |= FULL_TIME_INFO;
-    }
-    if (flags->h) {
-        long_format_flags |= HUMAN_READABLE_SIZE;
-    }
+    long_format_flags |= (flags->G && isatty(STDOUT_FILENO) ? IS_COLORIZED : 0) |
+                         (flags->at ? DISPLAY_EXTENDED_ATTRIBUTES : 0) |
+                         (flags->T ? FULL_TIME_INFO : 0) |
+                         (flags->h ? HUMAN_READABLE_SIZE : 0) |
+                         (flags->p ? PRINT_SLASH_AFTER_DIRECTORIES : 0);
     return long_format_flags;
 }
 
 static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
-            mx_print_entries_per_line(entries_list, Flags->G && isatty(STDOUT_FILENO), print_newline_in_the_end);
+            mx_print_entries_per_line(entries_list, Flags->G && isatty(STDOUT_FILENO), print_newline_in_the_end, Flags->p);
         break;
         case MULTI_COLUMN_OUTPUT_FORMAT:
-            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO));
+            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO), Flags->p);
         break;
         case LONG_OUTPUT_FORMAT:
             mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, flags_to_long_format_flags(Flags));

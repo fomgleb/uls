@@ -1,14 +1,14 @@
 #include "../../../inc/utils.h"
 
-t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {
+t_list *mx_get_entries_in_directory(t_entry directory, t_find_entries_flags find_entries_flags) {
     t_list *read_entries_list = NULL;
     DIR *dirstream = opendir(directory.relative_path);
 
     for (struct dirent *i = readdir(dirstream); i != NULL; i = readdir(dirstream)) {
-        if (!include_entries_stating_with_dot && i->d_name[0] == '.') {
+        if (!(find_entries_flags & INCLUDE_ENTRIES_STARTING_WITH_DOT) && i->d_name[0] == '.') {
             continue;
         }
-        if (ignore_current_and_father_directory && (mx_strcmp(i->d_name, ".") == 0 || mx_strcmp(i->d_name, "..") == 0)) {
+        if ((find_entries_flags & IGNORE_CURRENT_AND_FATHER_DIRECTORY) && (mx_strcmp(i->d_name, ".") == 0 || mx_strcmp(i->d_name, "..") == 0)) {
             continue;
         }
         char *new_entry_path = mx_strnew(mx_strlen(directory.relative_path) + mx_strlen("/") + mx_strlen(i->d_name));
@@ -19,20 +19,19 @@ t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stat
         *(new_entry->dirent) = *i;
         mx_push_back(&read_entries_list, new_entry);
     }
-    
+
     closedir(dirstream);
-    
+
     return read_entries_list;
 }
 
-t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory) {
-    t_list *read_entries_list = mx_get_entries_in_directory(directory, include_entries_stating_with_dot, ignore_current_and_father_directory);
+t_list *mx_get_entries_in_directory_recursively(t_entry directory, t_find_entries_flags find_entries_flags) {
+    t_list *read_entries_list = mx_get_entries_in_directory(directory, find_entries_flags);
     for (t_list *i = read_entries_list; i != NULL; i = i->next) {
         t_entry *entry = (t_entry *)i->data;
         if (S_ISDIR(entry->stat.st_mode) && mx_strcmp(entry->dirent->d_name, ".") != 0 && mx_strcmp(entry->dirent->d_name, "..") != 0) {
-            entry->entries_list = mx_get_entries_in_directory_recursively(*entry, include_entries_stating_with_dot, ignore_current_and_father_directory);
+            entry->entries_list = mx_get_entries_in_directory_recursively(*entry, find_entries_flags);
         }
     }
     return read_entries_list;
 }
-
