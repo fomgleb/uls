@@ -82,7 +82,7 @@ static void print_number_of_entry_links_with_indent(t_entry *entry, size_t colum
 static void print_owner_name_with_indent(t_entry *entry, size_t column_size) {
     mx_printstr(getpwuid(entry->stat.st_uid)->pw_name);
     mx_printnchar(' ', column_size - mx_strlen(getpwuid(entry->stat.st_uid)->pw_name));
-    mx_printnchar(' ', 2);
+    mx_printnchar(' ', 1);
 }
 
 static void print_group_name_with_indent(t_entry *entry, size_t column_size) {
@@ -199,8 +199,20 @@ static time_t calculate_difference_between_times(time_t time1, time_t time2) {
 void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags) {
     print_entry_permissions_with_indent(&entry);
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
-    print_owner_name_with_indent(&entry, column_sizes[1]);
-    print_group_name_with_indent(&entry, column_sizes[2]);
+
+    if (!(long_format_flags & HIDE_OWNER_NAME)) {
+        print_owner_name_with_indent(&entry, column_sizes[1]);
+        if (!(long_format_flags & HIDE_GROUP_NAME)) {
+            mx_printchar(' ');
+        }
+    } else if (long_format_flags & HIDE_GROUP_NAME) {
+        mx_printchar(' ');
+    }
+    if (!(long_format_flags & HIDE_GROUP_NAME)) {
+        print_group_name_with_indent(&entry, column_sizes[2]);
+    } else {
+        mx_printchar(' ');
+    }
     if (long_format_flags & HUMAN_READABLE_SIZE) {
         print_human_readable_entry_size_with_indent(entry.stat.st_size);
     } else {

@@ -14,6 +14,8 @@
 
 #define MAX2(a, b) (a > b ? a : b)
 #define MAX3(a, b, c) (MAX2(MAX2(a, b), c))
+#define MAX4(a, b, c, d) (MAX2(MAX3(a, b, c), d))
+#define MAX5(a, b, c, d, e) (MAX2(MAX4(a, b, c, d), e))
 
 #define SECONDS_IN_HALF_YEAR 15768000
 #define BYTES_IN_KILOBYTE 1024
@@ -55,7 +57,9 @@ typedef enum e_long_format_flags {
     DISPLAY_EXTENDED_ATTRIBUTES = 4,
     FULL_TIME_INFO = 8,
     HUMAN_READABLE_SIZE = 16,
-    PRINT_SLASH_AFTER_DIRECTORIES = 32
+    PRINT_SLASH_AFTER_DIRECTORIES = 32,
+    HIDE_OWNER_NAME = 64,
+    HIDE_GROUP_NAME = 128
 } t_long_format_flags;
 typedef const t_long_format_flags c_long_format_flags;
 

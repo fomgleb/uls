@@ -3,8 +3,7 @@
 static t_find_entries_flags flags_to_find_entries_flags(t_flags *flags) {
     t_find_entries_flags find_entries_flags = 0;
     find_entries_flags |= (flags->a || flags->A || flags->f ? INCLUDE_ENTRIES_STARTING_WITH_DOT : 0) |
-                          (!flags->a && flags->A && !flags->f ? IGNORE_CURRENT_AND_FATHER_DIRECTORY : 0) |
-                          (flags->p ? PUT_SLASH_AFTER_EARCH_DIRECTORY : 0);
+                          (!flags->a && flags->A && !flags->f ? IGNORE_CURRENT_AND_FATHER_DIRECTORY : 0);
     return find_entries_flags;
 }
 

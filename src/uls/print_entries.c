@@ -21,12 +21,12 @@ static c_time_type get_time_type(c_flags_ptr flags) {
 
 static t_output_format get_output_format(t_flags *flags) {
     bool output_is_to_terminal = isatty(STDOUT_FILENO);
-    int priority_flag = MAX3(flags->C, flags->one, flags->l);
+    int priority_flag = MAX5(flags->C, flags->one, flags->l, flags->o, flags->g);
     priority_flag = priority_flag == 0 ? -1 : priority_flag;
     if (output_is_to_terminal) {
         if (priority_flag == (int)flags->one) {
             return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
-        } else if (priority_flag == (int)flags->l) {
+        } else if (priority_flag == (int)flags->l || priority_flag == (int)flags->o || priority_flag == (int)flags->g) {
             return LONG_OUTPUT_FORMAT;
         } else {
             return MULTI_COLUMN_OUTPUT_FORMAT;
@@ -48,7 +48,9 @@ static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
                          (flags->at ? DISPLAY_EXTENDED_ATTRIBUTES : 0) |
                          (flags->T ? FULL_TIME_INFO : 0) |
                          (flags->h ? HUMAN_READABLE_SIZE : 0) |
-                         (flags->p ? PRINT_SLASH_AFTER_DIRECTORIES : 0);
+                         (flags->p ? PRINT_SLASH_AFTER_DIRECTORIES : 0) |
+                         (flags->o ? HIDE_GROUP_NAME : 0) |
+                         (flags->g ? HIDE_OWNER_NAME : 0);
     return long_format_flags;
 }
 
