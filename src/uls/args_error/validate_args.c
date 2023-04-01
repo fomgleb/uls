@@ -1,6 +1,6 @@
 #include "../../../inc/uls.h"
 
-t_args_error mx_validate_args(t_args *args, c_str existing_flags) {
+t_args_error mx_validate_args(c_args_ptr args, c_str existing_flags) {
     t_args_error args_error = mx_create_args_error();
 
     if (args->flags_str != NULL) {

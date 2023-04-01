@@ -10,6 +10,8 @@ typedef struct s_args {
     t_list *entry_names_list;
     char *flags_str;
 } t_args;
+typedef const t_args c_args;
+typedef c_args *const c_args_ptr;
 
 typedef enum e_args_error_code {
     NO_ERRORS,
@@ -22,6 +24,8 @@ typedef struct s_args_error {
     t_list *invalid_entry_names_list;
     char illegal_flag;
 } t_args_error;
+typedef const t_args_error c_args_error;
+typedef c_args_error *const c_args_error_ptr;
 
 typedef enum e_output_format {
     ONE_ENTRY_PER_LINE_OUTPUT_FORMAT,
@@ -70,14 +74,14 @@ void mx_print_args_error(t_args_error args_error, const char *existing_flags);
 
 t_args_error mx_create_args_error(void);
 void mx_free_args_error(t_args_error args_error);
-t_args_error mx_validate_args(t_args *args, c_str existing_flags);
+t_args_error mx_validate_args(c_args_ptr args, c_str existing_flags);
 
-t_list *mx_find_entries_list(t_list *input_entry_names_list, t_flags *flags);
+t_list *mx_find_entries_list(t_list *all_inputted_paths_to_entries_list, t_list *invalid_inputted_paths_to_entries_list, t_flags *flags);
 
 t_flags mx_create_flags(char *flags_str);
 
 void mx_free_entries_list(t_list *entries_list);
 
-void mx_print_files_and_directories(t_list *entries_list, t_flags *flags);
+void mx_print_files_and_directories(t_list *entries_list, t_flags *flags, c_size_t invalid_paths_to_entries_count);
 
 void mx_sort_entries_list_recursively(t_list *entries_list, t_flags *flags);

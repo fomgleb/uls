@@ -14,4 +14,3 @@ t_entry *mx_create_entry_ptr(char *relative_path) {
     *entry = mx_create_entry(relative_path);
     return entry;
 }
-
