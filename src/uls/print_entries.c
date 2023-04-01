@@ -34,7 +34,7 @@ static t_output_format get_output_format(t_flags *flags) {
     } else {
         if (priority_flag == (int)flags->C) {
             return MULTI_COLUMN_OUTPUT_FORMAT;
-        } else if (priority_flag == (int)flags->l) {
+        } else if (priority_flag == (int)flags->l || priority_flag == (int)flags->o || priority_flag == (int)flags->g) {
             return LONG_OUTPUT_FORMAT;
         } else {
             return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
