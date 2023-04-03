@@ -1,7 +1,7 @@
 #include "../../inc/uls.h"
 
 int main(c_int argc, c_str_arr argv) {
-    c_str EXISTING_FLAGS = "ACGRSTU@acdefghloprtu1";
+    c_str EXISTING_FLAGS = "ACGRSTU@acdefghlmoprtu1";
 
     c_args args = mx_convert_to_args(argc, argv);
     t_args_error args_error = mx_validate_args(&args, EXISTING_FLAGS);

@@ -21,13 +21,15 @@ static c_time_type get_time_type(c_flags_ptr flags) {
 
 static t_output_format get_output_format(t_flags *flags) {
     bool output_is_to_terminal = isatty(STDOUT_FILENO);
-    int priority_flag = MAX5(flags->C, flags->one, flags->l, flags->o, flags->g);
+    int priority_flag = MAX6(flags->C, flags->one, flags->l, flags->o, flags->g, flags->m);
     priority_flag = priority_flag == 0 ? -1 : priority_flag;
     if (output_is_to_terminal) {
         if (priority_flag == (int)flags->one) {
             return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
         } else if (priority_flag == (int)flags->l || priority_flag == (int)flags->o || priority_flag == (int)flags->g) {
             return LONG_OUTPUT_FORMAT;
+        } else if (priority_flag == (int)flags->m) {
+            return SEPARATED_BY_COMMAS_OUTPUT_FORMAT;
         } else {
             return MULTI_COLUMN_OUTPUT_FORMAT;
         }
@@ -36,6 +38,8 @@ static t_output_format get_output_format(t_flags *flags) {
             return MULTI_COLUMN_OUTPUT_FORMAT;
         } else if (priority_flag == (int)flags->l || priority_flag == (int)flags->o || priority_flag == (int)flags->g) {
             return LONG_OUTPUT_FORMAT;
+        } else if (priority_flag == (int)flags->m) {
+            return SEPARATED_BY_COMMAS_OUTPUT_FORMAT;
         } else {
             return ONE_ENTRY_PER_LINE_OUTPUT_FORMAT;
         }
@@ -71,6 +75,9 @@ static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
         case LONG_OUTPUT_FORMAT:
             mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, flags_to_long_format_flags(Flags), flags_to_entry_printing_flags(Flags));
         break;
+        case SEPARATED_BY_COMMAS_OUTPUT_FORMAT:
+            mx_print_entries_separated_by_commas(entries_list, TerminalWidth, flags_to_entry_printing_flags(Flags));
+        break;
     }
     mx_printchar_if(print_newline_in_the_end && entries_list, '\n');
 }
@@ -103,6 +110,9 @@ static void set_global_variables(t_flags *flags) {
         break;
         case LONG_OUTPUT_FORMAT:
             TimeType = get_time_type(flags);
+        break;
+        case SEPARATED_BY_COMMAS_OUTPUT_FORMAT:
+            TerminalWidth = mx_get_terminal_width();
         break;
     }
 }

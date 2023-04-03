@@ -16,6 +16,7 @@
 #define MAX3(a, b, c) (MAX2(MAX2(a, b), c))
 #define MAX4(a, b, c, d) (MAX2(MAX3(a, b, c), d))
 #define MAX5(a, b, c, d, e) (MAX2(MAX4(a, b, c, d), e))
+#define MAX6(a, b, c, d, e, f) (MAX2(MAX5(a, b, c, d, e), f))
 
 #define SECONDS_IN_HALF_YEAR 15768000
 #define BYTES_IN_KILOBYTE 1024
@@ -84,6 +85,7 @@ t_list *mx_get_entries_in_directory_recursively(t_entry directory, t_find_entrie
 
 void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, t_entry_printing_flags flags);
 void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags);
+void mx_print_entries_separated_by_commas(t_list *entries_list, ushort terminal_width, c_entry_printing_flags flags);
 void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flags);
 
 size_t mx_print_entry_name(t_entry *entry, bool colorized, bool slash_after_dirs);
@@ -108,6 +110,7 @@ float mx_round(c_float number);
 void mx_print_char_and_int_if( c_bool condition, c_char character, c_int integer);
 void mx_print_char_and_int(c_char character, c_int integer);
 void mx_print_char_and_string(c_char character, c_str string);
+size_t mx_printstr_if(c_bool condition, c_str string);
 void mx_print_two_chars(c_char character1, c_char character2);
 void mx_print_two_strings_if(c_bool condition, c_str string1, c_str string2);
 void mx_print_two_strings(c_str string1, c_str string2);

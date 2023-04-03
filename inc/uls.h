@@ -30,7 +30,8 @@ typedef c_args_error *const c_args_error_ptr;
 typedef enum e_output_format {
     ONE_ENTRY_PER_LINE_OUTPUT_FORMAT,
     MULTI_COLUMN_OUTPUT_FORMAT,
-    LONG_OUTPUT_FORMAT
+    LONG_OUTPUT_FORMAT,
+    SEPARATED_BY_COMMAS_OUTPUT_FORMAT
 } t_output_format;
 
 typedef struct s_flags {
