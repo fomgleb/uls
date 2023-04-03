@@ -63,15 +63,16 @@ static t_entry_printing_flags flags_to_entry_printing_flags(t_flags *flags) {
 static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
-            mx_print_entries_per_line(entries_list, flags_to_entry_printing_flags(Flags), print_newline_in_the_end);
+            mx_print_entries_per_line(entries_list, flags_to_entry_printing_flags(Flags));
         break;
         case MULTI_COLUMN_OUTPUT_FORMAT:
-            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, flags_to_entry_printing_flags(Flags));
+            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, flags_to_entry_printing_flags(Flags));
         break;
         case LONG_OUTPUT_FORMAT:
-            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, flags_to_long_format_flags(Flags), flags_to_entry_printing_flags(Flags));
+            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, flags_to_long_format_flags(Flags), flags_to_entry_printing_flags(Flags));
         break;
     }
+    mx_printchar_if(print_newline_in_the_end && entries_list, '\n');
 }
 
 static void print_directory_content_recursively(t_entry *directory, bool print_dir_name, bool print_newline_in_the_beginning) {

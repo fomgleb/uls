@@ -15,7 +15,7 @@ static ushort get_max_element_size(t_list *entries_list, bool slash_after_dirs) 
     return column_width;
 }
 
-void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, t_entry_printing_flags flags) {
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, t_entry_printing_flags flags) {
     if (entries_list == NULL) {
         return;
     }
@@ -54,6 +54,4 @@ void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, 
         }
         mx_printchar('\n');
     }
-
-    mx_printchar_if(print_newline_in_the_end, '\n');
 }

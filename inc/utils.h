@@ -82,9 +82,9 @@ void mx_free_entry_ptr(t_entry **entry);
 t_list *mx_get_entries_in_directory(t_entry directory, t_find_entries_flags find_entries_flags);
 t_list *mx_get_entries_in_directory_recursively(t_entry directory, t_find_entries_flags find_entries_flags);
 
-void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, t_entry_printing_flags flags);
-void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags);
-void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flags, bool print_newline_in_the_end);
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, t_entry_printing_flags flags);
+void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags);
+void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flags);
 
 size_t mx_print_entry_name(t_entry *entry, bool colorized, bool slash_after_dirs);
 

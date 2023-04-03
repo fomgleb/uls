@@ -1,6 +1,6 @@
 #include "../../../../inc/utils.h"
 
-void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flags, bool print_newline_in_the_end) {
+void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flags) {
     if (entries_list == NULL) {
         return;
     }
@@ -9,5 +9,4 @@ void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flag
         mx_print_entry_name(entry, flags & IS_COLORIZED, flags & PRINT_SLASH_AFTER_DIRECTORIES);
         mx_printchar('\n');
     }
-    mx_printchar_if(print_newline_in_the_end, '\n');
 }
