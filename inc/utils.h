@@ -59,7 +59,8 @@ typedef enum e_long_format_flags {
     HUMAN_READABLE_SIZE = 16,
     PRINT_SLASH_AFTER_DIRECTORIES = 32,
     HIDE_OWNER_NAME = 64,
-    HIDE_GROUP_NAME = 128
+    HIDE_GROUP_NAME = 128,
+    PRINT_ACCESS_CONTROL_LIST = 256
 } t_long_format_flags;
 typedef const t_long_format_flags c_long_format_flags;
 

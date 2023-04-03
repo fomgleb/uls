@@ -188,6 +188,36 @@ static void print_extended_attributes(t_entry *entry) {
     }
 }
 
+static void print_access_control_list(t_entry *entry) {
+    acl_t acl = acl_get_link_np(entry->relative_path, ACL_TYPE_EXTENDED);
+    if (acl == 0) return;
+    c_str desc = acl_to_text(acl, NULL);
+    char *pointer = NULL;
+    mx_printstr("\n 0: ");
+    pointer = mx_strchr(desc, '\n') + 1;
+    for (; *pointer != ':'; pointer++) {
+        mx_printchar(*pointer);
+    }
+    pointer = mx_strchr(pointer + 1, ':') + 1;
+    mx_printchar(':');
+    for (; *pointer != ':'; pointer++) {
+        mx_printchar(*pointer);
+    }
+    pointer = mx_strchr(pointer + 1, ':') + 1;
+    mx_printchar(' ');
+    for (; *pointer != ':'; pointer++) {
+        mx_printchar(*pointer);
+    }
+    pointer++;
+    mx_printchar(' ');
+    for (; *pointer != '\n'; pointer++) {
+        mx_printchar(*pointer);
+    }
+
+    acl_free((void *)desc);
+    acl_free(acl);
+}
+
 static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     if (time1 > time2) {
         return time1 - time2;
@@ -238,6 +268,9 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_t
     }
     if (long_format_flags & DISPLAY_EXTENDED_ATTRIBUTES) {
         print_extended_attributes(&entry);
+    }
+    if (long_format_flags & PRINT_ACCESS_CONTROL_LIST) {
+        print_access_control_list(&entry);
     }
     mx_printchar('\n');
 }

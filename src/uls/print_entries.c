@@ -50,7 +50,8 @@ static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
                          (flags->h ? HUMAN_READABLE_SIZE : 0) |
                          (flags->p ? PRINT_SLASH_AFTER_DIRECTORIES : 0) |
                          (flags->o ? HIDE_GROUP_NAME : 0) |
-                         (flags->g ? HIDE_OWNER_NAME : 0);
+                         (flags->g ? HIDE_OWNER_NAME : 0) |
+                         (flags->e ? PRINT_ACCESS_CONTROL_LIST : 0);
     return long_format_flags;
 }
 
