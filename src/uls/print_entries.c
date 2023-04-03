@@ -44,27 +44,32 @@ static t_output_format get_output_format(t_flags *flags) {
 
 static t_long_format_flags flags_to_long_format_flags(t_flags *flags) {
     t_long_format_flags long_format_flags = 0;
-    long_format_flags |= (flags->G && isatty(STDOUT_FILENO) ? IS_COLORIZED : 0) |
-                         (flags->at ? DISPLAY_EXTENDED_ATTRIBUTES : 0) |
+    long_format_flags |= (flags->at ? DISPLAY_EXTENDED_ATTRIBUTES : 0) |
                          (flags->T ? FULL_TIME_INFO : 0) |
                          (flags->h ? HUMAN_READABLE_SIZE : 0) |
-                         (flags->p ? PRINT_SLASH_AFTER_DIRECTORIES : 0) |
                          (flags->o ? HIDE_GROUP_NAME : 0) |
                          (flags->g ? HIDE_OWNER_NAME : 0) |
                          (flags->e ? PRINT_ACCESS_CONTROL_LIST : 0);
     return long_format_flags;
 }
 
+static t_entry_printing_flags flags_to_entry_printing_flags(t_flags *flags) {
+    t_entry_printing_flags entry_printing_flags = 0;
+    entry_printing_flags |= (flags->G && isatty(STDOUT_FILENO) ? IS_COLORIZED : 0) |
+                            (flags->p ? PRINT_SLASH_AFTER_DIRECTORIES : 0);
+    return entry_printing_flags;
+}
+
 static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
     switch (OutputFormat) {
         case ONE_ENTRY_PER_LINE_OUTPUT_FORMAT:
-            mx_print_entries_per_line(entries_list, Flags->G && isatty(STDOUT_FILENO), print_newline_in_the_end, Flags->p);
+            mx_print_entries_per_line(entries_list, flags_to_entry_printing_flags(Flags), print_newline_in_the_end);
         break;
         case MULTI_COLUMN_OUTPUT_FORMAT:
-            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, Flags->G && isatty(STDOUT_FILENO), Flags->p);
+            mx_print_entries_in_columns(entries_list, ColumnDelimiter, TerminalWidth, print_newline_in_the_end, flags_to_entry_printing_flags(Flags));
         break;
         case LONG_OUTPUT_FORMAT:
-            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, flags_to_long_format_flags(Flags));
+            mx_print_long_formatted_entries(entries_list, TimeType, PrintTotalNumberOf512ByteBlocks, print_newline_in_the_end, flags_to_long_format_flags(Flags), flags_to_entry_printing_flags(Flags));
         break;
     }
 }

@@ -15,13 +15,13 @@ static ushort get_max_element_size(t_list *entries_list, bool slash_after_dirs) 
     return column_width;
 }
 
-void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, bool colorized, bool slash_after_dirs) {
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, t_entry_printing_flags flags) {
     if (entries_list == NULL) {
         return;
     }
 
     int number_of_entries = mx_list_size(entries_list);
-    ushort column_width = get_max_element_size(entries_list, slash_after_dirs);
+    ushort column_width = get_max_element_size(entries_list, flags & PRINT_SLASH_AFTER_DIRECTORIES);
     size_t tab_size_after_entry = mx_round_down(column_width / 8.0f + 1) * 8 - column_width;
     column_width += column_delimiter == '\t' ? tab_size_after_entry : 1;
 
@@ -35,12 +35,12 @@ void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, 
             ushort converted_index = x * number_of_rows + y;
             if (converted_index < number_of_entries) {
                 t_entry *entry = (t_entry *)mx_get_by_index(entries_list, converted_index)->data;
-                size_t printing_string_length = mx_print_entry_name(entry, colorized, slash_after_dirs);
-                if (slash_after_dirs && !S_ISDIR(entry->stat.st_mode)) {
+                size_t printing_string_length = mx_print_entry_name(entry, flags & IS_COLORIZED, flags & PRINT_SLASH_AFTER_DIRECTORIES);
+                if ((flags & PRINT_SLASH_AFTER_DIRECTORIES) && !S_ISDIR(entry->stat.st_mode)) {
                     printing_string_length++;
                 }
                 if (x + 1 != number_of_columns) {
-                    if (slash_after_dirs && !S_ISDIR(entry->stat.st_mode)) {
+                    if ((flags & PRINT_SLASH_AFTER_DIRECTORIES) && !S_ISDIR(entry->stat.st_mode)) {
                         mx_printchar(' ');
                     }
                     if (column_delimiter == '\t') {

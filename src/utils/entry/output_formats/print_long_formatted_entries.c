@@ -47,7 +47,7 @@ static size_t *calculate_long_format_column_sizes(t_list *entries) {
     return column_sizes;
 }
 
-void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, c_long_format_flags long_format_flags) {
+void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags) {
     if (entries_list == NULL) {
         return;
     }
@@ -61,7 +61,7 @@ void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type
     size_t *column_sizes = calculate_long_format_column_sizes((t_list *)entries_list);
     for (const t_list *j = entries_list; j != NULL; j = j->next) {
         t_entry entry = *(t_entry *)j->data;
-        mx_print_long_formatted_entry(entry, column_sizes, time_type, long_format_flags);
+        mx_print_long_formatted_entry(entry, column_sizes, time_type, long_format_flags, entry_printing_flags);
     }
     free(column_sizes);
 

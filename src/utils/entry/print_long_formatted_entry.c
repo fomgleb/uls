@@ -226,7 +226,7 @@ static time_t calculate_difference_between_times(time_t time1, time_t time2) {
     }
 }
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags) {
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags) {
     print_entry_permissions_with_indent(&entry);
     print_number_of_entry_links_with_indent(&entry, column_sizes[0]);
 
@@ -261,7 +261,7 @@ void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_t
             print_hours_and_minutes_with_indent(human_readable_time);
         }
     }
-    mx_print_entry_name(&entry, long_format_flags & IS_COLORIZED, long_format_flags & PRINT_SLASH_AFTER_DIRECTORIES);
+    mx_print_entry_name(&entry, entry_printing_flags & IS_COLORIZED, entry_printing_flags & PRINT_SLASH_AFTER_DIRECTORIES);
     if (S_ISLNK(entry.stat.st_mode)) {
         mx_printstr(" -> ");
         print_link_content(entry);
