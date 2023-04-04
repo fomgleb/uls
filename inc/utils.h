@@ -101,7 +101,7 @@ bool mx_sort_entries_by_creation_time(void *a, void *b);
 bool mx_reverse_entries(void *a, void *b);
 
 void mx_free_files_dirs(t_files_dirs *files_dirs);
-t_files_dirs mx_separate_entries(t_list *entries_list);
+t_files_dirs mx_separate_entries(t_list *entries_list, c_bool follow_link);
 
 float mx_round_down(c_float number);
 float mx_round_up(c_float number);

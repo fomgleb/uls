@@ -88,7 +88,7 @@ static void print_directory_content_recursively(t_entry *directory, bool print_d
     PrintTotalNumberOf512ByteBlocks = true;
     print_entries(directory->entries_list, false);
 
-    t_files_dirs files_dirs = mx_separate_entries(directory->entries_list);
+    t_files_dirs files_dirs = mx_separate_entries(directory->entries_list, false);
     for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
         t_entry *i_directory = (t_entry *)i->data;
         if (mx_strcmp(i_directory->dirent->d_name, ".") != 0 && mx_strcmp(i_directory->dirent->d_name, "..") != 0) {
@@ -122,7 +122,7 @@ void mx_print_files_and_directories(t_list *entries_list, t_flags *flags, c_size
     if (flags->d) {
         print_entries(entries_list, false);
     } else {
-        t_files_dirs files_dirs = mx_separate_entries(entries_list);
+        t_files_dirs files_dirs = mx_separate_entries(entries_list, !flags->l && !flags->g && !flags->o);
         PrintTotalNumberOf512ByteBlocks = files_dirs.dirs_list != NULL;
         print_entries(files_dirs.files_list, files_dirs.dirs_list != NULL);
         if (flags->R) {

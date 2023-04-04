@@ -27,7 +27,7 @@ t_list *mx_find_entries_list(t_list *all_inputted_paths_to_entries_list, t_list 
 
     for (t_list *i = entries_list; i != NULL; i = i->next) {
         t_entry *entry = (t_entry *)i->data;
-        if (!S_ISDIR(entry->stat.st_mode)) continue;
+        if (!S_ISDIR(entry->stat.st_mode) && (!S_ISLNK(entry->stat.st_mode) || (flags->l || flags->o || flags->g))) continue;
         if (flags->R) {
             entry->entries_list = mx_get_entries_in_directory_recursively(*entry, flags_to_find_entries_flags(flags));
         } else {
