@@ -1,0 +1,7 @@
+main
+obj
+*.a
+*.bin
+.vscode
+text.txt
+main.c
