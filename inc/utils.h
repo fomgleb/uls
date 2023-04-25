@@ -14,10 +14,15 @@
 
 #define MAX2(a, b) (a > b ? a : b)
 #define MAX3(a, b, c) (MAX2(MAX2(a, b), c))
+#define MAX4(a, b, c, d) (MAX2(MAX3(a, b, c), d))
+#define MAX5(a, b, c, d, e) (MAX2(MAX4(a, b, c, d), e))
+#define MAX6(a, b, c, d, e, f) (MAX2(MAX5(a, b, c, d, e), f))
 
 #define SECONDS_IN_HALF_YEAR 15768000
+#define BYTES_IN_KILOBYTE 1024
 
 typedef char *str;
+typedef unsigned char uchar;
 typedef const bool c_bool;
 typedef const char c_char;
 typedef const float c_float;
@@ -32,6 +37,7 @@ typedef struct s_entry {
     struct dirent *dirent;
     struct stat stat;
     t_list *entries_list;
+    bool no_permission;
 } t_entry;
 
 typedef struct s_files_dirs {
@@ -48,12 +54,26 @@ typedef enum e_time_type {
 } t_time_type;
 typedef const t_time_type c_time_type;
 
-typedef enum e_long_format_flags {
+typedef enum e_entry_printing_flags {
     IS_COLORIZED = 2,
+    PRINT_SLASH_AFTER_DIRECTORIES = 4
+} t_entry_printing_flags;
+typedef const t_entry_printing_flags c_entry_printing_flags;
+
+typedef enum e_long_format_flags {
     DISPLAY_EXTENDED_ATTRIBUTES = 4,
-    FULL_TIME_INFO = 8
+    FULL_TIME_INFO = 8,
+    HUMAN_READABLE_SIZE = 16,
+    HIDE_OWNER_NAME = 64,
+    HIDE_GROUP_NAME = 128,
+    PRINT_ACCESS_CONTROL_LIST = 256
 } t_long_format_flags;
 typedef const t_long_format_flags c_long_format_flags;
+
+typedef enum e_find_entries_flags {
+    INCLUDE_ENTRIES_STARTING_WITH_DOT = 2,
+    IGNORE_CURRENT_AND_FATHER_DIRECTORY = 4
+} t_find_entries_flags;
 
 t_entry mx_create_entry(char *relative_path);
 t_entry *mx_create_entry_ptr(char *relative_path);
@@ -61,16 +81,17 @@ t_entry *mx_create_entry_ptr(char *relative_path);
 void mx_free_entry(t_entry entry);
 void mx_free_entry_ptr(t_entry **entry);
 
-t_list *mx_get_entries_in_directory(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
-t_list *mx_get_entries_in_directory_recursively(t_entry directory, bool include_entries_stating_with_dot, bool ignore_current_and_father_directory);
+t_list *mx_get_entries_in_directory(t_entry *directory, t_find_entries_flags find_entries_flags);
+t_list *mx_get_entries_in_directory_recursively(t_entry *directory, t_find_entries_flags find_entries_flags);
 
-void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, bool print_newline_in_the_end, bool colorized);
-void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, bool print_newline_in_the_end, c_long_format_flags long_format_flags);
-void mx_print_entries_per_line(t_list *entries_list, bool colorized, bool print_newline_in_the_end);
+void mx_print_entries_in_columns(t_list *entries_list, c_char column_delimiter, ushort terminal_width, t_entry_printing_flags flags);
+void mx_print_long_formatted_entries(t_list *entries_list, c_time_type time_type, bool print_total_number_of_512_byte_blocks, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags);
+void mx_print_entries_separated_by_commas(t_list *entries_list, ushort terminal_width, c_entry_printing_flags flags);
+void mx_print_entries_per_line(t_list *entries_list, t_entry_printing_flags flags);
 
-size_t mx_print_entry_name(t_entry *entry, bool colorized);
+size_t mx_print_entry_name(t_entry *entry, bool colorized, bool slash_after_dirs);
 
-void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags);
+void mx_print_long_formatted_entry(t_entry entry, size_t *column_sizes, c_time_type time_type, c_long_format_flags long_format_flags, c_entry_printing_flags entry_printing_flags);
 
 bool mx_sort_entries_by_name(void *a, void *b);
 bool mx_sort_entries_by_size(void *a, void *b);
@@ -81,14 +102,22 @@ bool mx_sort_entries_by_creation_time(void *a, void *b);
 bool mx_reverse_entries(void *a, void *b);
 
 void mx_free_files_dirs(t_files_dirs *files_dirs);
-t_files_dirs mx_separate_entries(t_list *entries_list);
+t_files_dirs mx_separate_entries(t_list *entries_list, c_bool follow_link);
 
 float mx_round_down(c_float number);
 float mx_round_up(c_float number);
+float mx_round(c_float number);
 
+void mx_print_char_and_int_if( c_bool condition, c_char character, c_int integer);
+void mx_print_char_and_int(c_char character, c_int integer);
+void mx_print_char_and_string(c_char character, c_str string);
+size_t mx_printstr_if(c_bool condition, c_str string);
+void mx_print_two_chars(c_char character1, c_char character2);
 void mx_print_two_strings_if(c_bool condition, c_str string1, c_str string2);
 void mx_print_two_strings(c_str string1, c_str string2);
 void mx_printchar_if(c_bool condition, c_char character);
 void mx_printnchar_if(c_bool condition, c_char character, c_size_t count);
+
+void mx_print_six_err(char *a, char *b, char *c, char *d, char *e);
 
 ushort mx_get_terminal_width(void);

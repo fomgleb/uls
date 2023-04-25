@@ -7,7 +7,7 @@ OBJDIR = obj
 SRCDIR = src
 LIBMX_DIR = libmx
 
-SOURCES = $(subst ./,,$(shell find $(SRCDIR) -name "*.c"))
+SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(subst $(SRCDIR)/,,$(addprefix $(OBJDIR)/, $(SOURCES:.c=.o)))
 DEPENDS = $(subst $(SRCDIR)/,,$(addprefix $(OBJDIR)/, $(SOURCES:.c=.d)))
 
@@ -41,7 +41,7 @@ PHONY += clean
 clean:
 	@rm -rf $(OBJDIR)
 	@printf "$(notdir $(BINARYNAME))\t$@\n"
-	
+
 PHONY += uninstall
 uninstall: clean
 	@rm -rf $(BINARYNAME)

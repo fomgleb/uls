@@ -7,3 +7,4 @@ uls
 !uls/
 settings.json
 .DS_Store
+.vscode

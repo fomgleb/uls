@@ -1,0 +1,42 @@
+#include "../inc/utils.h"
+
+t_list *mx_get_entries_in_directory(t_entry *directory, t_find_entries_flags find_entries_flags) {
+    t_list *read_entries_list = NULL;
+    DIR *dirstream = opendir(directory->relative_path);
+
+    if (!dirstream) {
+        directory->no_permission = true;
+        return NULL;
+    }
+
+    for (struct dirent *i = readdir(dirstream); i != NULL; i = readdir(dirstream)) {
+        if (!(find_entries_flags & INCLUDE_ENTRIES_STARTING_WITH_DOT) && i->d_name[0] == '.') {
+            continue;
+        }
+        if ((find_entries_flags & IGNORE_CURRENT_AND_FATHER_DIRECTORY) && (mx_strcmp(i->d_name, ".") == 0 || mx_strcmp(i->d_name, "..") == 0)) {
+            continue;
+        }
+        char *new_entry_path = mx_strnew(mx_strlen(directory->relative_path) + mx_strlen("/") + mx_strlen(i->d_name));
+        mx_strcat(mx_strcat(mx_strcat(new_entry_path, directory->relative_path), "/"), i->d_name);
+        t_entry *new_entry = mx_create_entry_ptr(new_entry_path);
+        free(new_entry_path);
+        new_entry->dirent = malloc(sizeof(struct dirent));
+        *(new_entry->dirent) = *i;
+        mx_push_back(&read_entries_list, new_entry);
+    }
+
+    closedir(dirstream);
+
+    return read_entries_list;
+}
+
+t_list *mx_get_entries_in_directory_recursively(t_entry *directory, t_find_entries_flags find_entries_flags) {
+    t_list *read_entries_list = mx_get_entries_in_directory(directory, find_entries_flags);
+    for (t_list *i = read_entries_list; i != NULL; i = i->next) {
+        t_entry *entry = i->data;
+        if (S_ISDIR(entry->stat.st_mode) && mx_strcmp(entry->dirent->d_name, ".") != 0 && mx_strcmp(entry->dirent->d_name, "..") != 0) {
+            entry->entries_list = mx_get_entries_in_directory_recursively(entry, find_entries_flags);
+        }
+    }
+    return read_entries_list;
+}
