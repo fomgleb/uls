@@ -81,7 +81,7 @@ static void print_entries(t_list *entries_list, bool print_newline_in_the_end) {
             mx_print_entries_separated_by_commas(entries_list, TerminalWidth, flags_to_entry_printing_flags(Flags));
         break;
     }
-    mx_printchar_if(print_newline_in_the_end && entries_list, '\n');
+    mx_printchar_if(print_newline_in_the_end, '\n');
 }
 
 static void print_directory_content_recursively(t_entry *directory, bool print_dir_name, bool print_newline_in_the_beginning) {
@@ -142,7 +142,7 @@ bool mx_print_files_and_directories(t_list *entries_list, t_flags *flags, c_size
     } else {
         t_files_dirs files_dirs = mx_separate_entries(entries_list, !flags->l && !flags->g && !flags->o);
         PrintTotalNumberOf512ByteBlocks = false;
-        print_entries(files_dirs.files_list, files_dirs.dirs_list != NULL);
+        print_entries(files_dirs.files_list, files_dirs.dirs_list && files_dirs.files_list);
         if (flags->R) {
             for (t_list *i = files_dirs.dirs_list; i != NULL; i = i->next) {
                 t_entry *directory = (t_entry *)i->data;
@@ -167,6 +167,7 @@ bool mx_print_files_and_directories(t_list *entries_list, t_flags *flags, c_size
                     mx_printerr(": ");
                     mx_printerr("Permission denied\n");
                     PermissionDenied = true;
+                    mx_printstr_if(i->next != NULL, "\n");
                     continue;
                 }
                 PrintTotalNumberOf512ByteBlocks = true;
