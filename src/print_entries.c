@@ -91,8 +91,8 @@ static void print_directory_content_recursively(t_entry *directory, bool print_d
         char *path = directory->relative_path;
         size_t last_char_index_of_name = mx_strlen(path) - 1;
         for ( ; path[last_char_index_of_name] == '/' ; last_char_index_of_name--) { }
-        size_t first_char_index_of_name = last_char_index_of_name;
-        for ( ; path[first_char_index_of_name] != '/'; first_char_index_of_name--) { }
+        int first_char_index_of_name = last_char_index_of_name;
+        for ( ; path[first_char_index_of_name] != '/' && first_char_index_of_name != -1; first_char_index_of_name--) { }
         first_char_index_of_name++;
 
         mx_printerr(PROGRAM_NAME);
@@ -157,8 +157,8 @@ bool mx_print_files_and_directories(t_list *entries_list, t_flags *flags, c_size
                     char *path = directory->relative_path;
                     size_t last_char_index_of_name = mx_strlen(path) - 1;
                     for ( ; path[last_char_index_of_name] == '/' ; last_char_index_of_name--) { }
-                    size_t first_char_index_of_name = last_char_index_of_name;
-                    for ( ; path[first_char_index_of_name] != '/'; first_char_index_of_name--) { }
+                    int first_char_index_of_name = last_char_index_of_name;
+                    for ( ; path[first_char_index_of_name] != '/' && first_char_index_of_name != -1; first_char_index_of_name--) { }
                     first_char_index_of_name++;
 
                     mx_printerr(PROGRAM_NAME);
